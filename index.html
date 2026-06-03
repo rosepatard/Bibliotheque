@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lost in Translation — Reuters Advertising</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,300;1,9..144,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0D0D0D;
+  --paper: #F5F1E8;
+  --orange: #D94F1E;
+  --orange-light: #F5C4AD;
+  --orange-pale: #FBF0EB;
+  --muted: #8A7F74;
+  --white: #FDFAF4;
+  --dark: #1A1714;
+  --darker: #111;
+  --mono: 'DM Mono', monospace;
+  --serif: 'Fraunces', serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--serif); background: var(--paper); color: var(--ink); overflow-x: hidden; }
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0 10vw;
+  background: var(--dark);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-bg-text {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 28vw;
+  font-weight: 900;
+  color: rgba(255,255,255,0.025);
+  white-space: nowrap;
+  pointer-events: none;
+  letter-spacing: -0.05em;
+  font-family: var(--serif);
+  line-height: 1;
+}
+
+.hero-tag {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--orange);
+  margin-bottom: 24px;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.2s forwards;
+}
+
+.hero h1 {
+  font-size: clamp(48px, 7vw, 96px);
+  line-height: 1.0;
+  font-weight: 700;
+  color: var(--white);
+  max-width: 800px;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.4s forwards;
+}
+
+.hero h1 em { font-style: italic; font-weight: 300; color: var(--orange); }
+
+.hero-sub {
+  margin-top: 28px;
+  font-size: 18px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.5);
+  max-width: 520px;
+  line-height: 1.65;
+  font-style: italic;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.6s forwards;
+}
+
+.hero-scroll {
+  position: absolute;
+  bottom: 40px; left: 10vw;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.25);
+  opacity: 0;
+  animation: fadeUp 0.8s 1.2s forwards;
+}
+
+.scroll-line {
+  width: 40px; height: 1px;
+  background: var(--orange);
+  position: relative; overflow: hidden;
+}
+
+.scroll-line::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: white;
+  animation: scanline 2s 1.5s infinite;
+}
+
+@keyframes scanline { to { left: 200%; } }
+@keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+
+/* ── LAYOUT ── */
+section { position: relative; }
+
+.chapter {
+  padding: 100px 10vw 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.chapter-num { font-family: var(--mono); font-size: 11px; color: var(--orange); letter-spacing: 0.15em; }
+.chapter-line { flex: 1; height: 1px; background: rgba(0,0,0,0.12); }
+.chapter-title { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; }
+
+.orange-divider { height: 3px; background: linear-gradient(90deg, var(--orange), transparent); margin: 0 10vw; }
+
+/* ── THESIS ── */
+.thesis {
+  padding: 60px 10vw 80px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.thesis-statement { font-size: clamp(26px, 3vw, 44px); line-height: 1.2; font-weight: 700; }
+.thesis-statement em { font-style: italic; font-weight: 300; color: var(--orange); }
+.thesis-explanation { font-size: 16px; line-height: 1.75; color: #3A3530; font-weight: 300; font-style: italic; }
+.thesis-explanation strong { font-style: normal; font-weight: 700; color: var(--ink); }
+
+/* ── POSITION SPLIT ── */
+.position-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 300px;
+  margin: 0 10vw;
+  border: 1px solid rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+.pos-panel { padding: 44px 38px; position: relative; }
+.pos-panel.global { background: var(--white); border-right: 1px solid rgba(0,0,0,0.1); }
+.pos-panel.targeted { background: var(--dark); color: white; }
+
+.pos-tag { font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 18px; display: block; }
+.pos-panel.global .pos-tag { color: var(--muted); }
+.pos-panel.targeted .pos-tag { color: var(--orange); }
+
+.pos-panel h3 { font-size: 24px; line-height: 1.2; margin-bottom: 14px; font-weight: 700; }
+.pos-panel.global h3 { color: var(--ink); }
+.pos-panel.targeted h3 { color: white; }
+
+.pos-panel p { font-size: 14px; line-height: 1.7; font-style: italic; font-weight: 300; }
+.pos-panel.global p { color: var(--muted); }
+.pos-panel.targeted p { color: rgba(255,255,255,0.6); }
+.pos-panel.targeted p strong { color: white; font-style: normal; font-weight: 700; }
+.pos-panel.global p strong { color: var(--ink); font-style: normal; font-weight: 700; }
+.pos-arrow { position: absolute; bottom: 20px; right: 24px; font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; color: var(--orange); text-transform: uppercase; }
+
+/* ── BIG STAT ── */
+.big-stat-section {
+  padding: 100px 10vw;
+  background: var(--dark);
+  color: white;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.big-number {
+  font-family: var(--serif);
+  font-size: clamp(100px, 16vw, 200px);
+  line-height: 0.85;
+  font-weight: 900;
+  color: var(--orange);
+  letter-spacing: -0.04em;
+}
+
+.big-stat-text .stat-context { font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 14px; }
+.big-stat-text h3 { font-size: clamp(20px, 2.5vw, 32px); line-height: 1.3; font-weight: 700; margin-bottom: 14px; color: white; }
+.big-stat-text p { font-size: 15px; line-height: 1.7; color: rgba(255,255,255,0.5); font-style: italic; font-weight: 300; max-width: 480px; }
+.big-stat-text .source-tag { margin-top: 20px; font-family: var(--mono); font-size: 9px; color: rgba(255,255,255,0.2); letter-spacing: 0.1em; }
+
+/* ── WORD CLOUD ── */
+.comprehension-section { padding: 100px 10vw; background: var(--paper); }
+.section-intro { max-width: 640px; margin-bottom: 60px; }
+.section-intro h2 { font-size: clamp(26px, 3.5vw, 44px); line-height: 1.15; font-weight: 700; margin-bottom: 18px; }
+.section-intro h2 em { font-style: italic; font-weight: 300; color: var(--orange); }
+.section-intro p { font-size: 16px; line-height: 1.7; color: var(--muted); font-style: italic; font-weight: 300; }
+
+.word-cloud { display: flex; flex-wrap: wrap; gap: 10px; max-width: 820px; }
+
+.word {
+  padding: 10px 18px;
+  font-size: 15px;
+  font-style: italic;
+  font-weight: 300;
+  transition: all 0.8s ease;
+  cursor: default;
+}
+
+.word.understood { background: var(--ink); color: var(--white); }
+
+.word.missed {
+  background: var(--orange-pale);
+  color: var(--orange);
+  opacity: 1;
+  filter: blur(0);
+  text-decoration: none;
+}
+
+.word.missed.animate {
+  opacity: 0.4;
+  filter: blur(1.5px);
+  text-decoration: line-through;
+  text-decoration-color: var(--orange);
+}
+
+.word-legend { display: flex; gap: 32px; margin-top: 28px; font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; }
+.legend-item { display: flex; align-items: center; gap: 8px; color: var(--muted); }
+.legend-dot { width: 10px; height: 10px; }
+.legend-dot.understood { background: var(--ink); }
+.legend-dot.missed { background: var(--orange); opacity: 0.4; }
+.comprehension-source { margin-top: 16px; font-family: var(--mono); font-size: 9px; color: var(--muted); letter-spacing: 0.1em; line-height: 1.6; }
+
+/* ── PEOPLE GRID (81%) ── */
+.people-section {
+  padding: 100px 10vw;
+  background: var(--white);
+}
+
+.people-intro { max-width: 640px; margin-bottom: 48px; }
+.people-intro h2 { font-size: clamp(26px, 3.5vw, 44px); line-height: 1.15; font-weight: 700; margin-bottom: 16px; }
+.people-intro h2 em { font-style: italic; font-weight: 300; color: var(--orange); }
+.people-intro p { font-size: 16px; line-height: 1.7; color: var(--muted); font-style: italic; font-weight: 300; }
+
+.people-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  max-width: 680px;
+  margin-bottom: 24px;
+}
+
+.person {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.08);
+  transition: background 0.3s ease, transform 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.person.active { background: var(--orange); transform: scale(1.1); }
+.person.inactive { background: rgba(0,0,0,0.06); }
+
+.people-stats {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  gap: 40px;
+  margin-top: 32px;
+  padding-top: 32px;
+  border-top: 1px solid rgba(0,0,0,0.1);
+}
+
+.pstat {}
+.pstat .pnum {
+  font-family: var(--serif);
+  font-size: 48px;
+  font-weight: 900;
+  color: var(--orange);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.pstat .pdesc { font-size: 13px; line-height: 1.5; color: var(--muted); font-style: italic; max-width: 180px; }
+.pstat .psrc { font-family: var(--mono); font-size: 8.5px; color: rgba(0,0,0,0.3); margin-top: 6px; letter-spacing: 0.08em; }
+
+/* ── SEESAW ── */
+.seesaw-section {
+  padding: 100px 10vw;
+  background: var(--dark);
+  color: white;
+}
+
+.seesaw-intro { max-width: 640px; margin-bottom: 60px; }
+.seesaw-intro h2 { font-size: clamp(26px, 3.5vw, 44px); line-height: 1.15; font-weight: 700; margin-bottom: 16px; color: white; }
+.seesaw-intro h2 em { font-style: italic; font-weight: 300; color: var(--orange); }
+.seesaw-intro p { font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.5); font-style: italic; font-weight: 300; }
+
+.seesaw-viz {
+  display: grid;
+  grid-template-columns: 1fr 60px 1fr;
+  align-items: center;
+  gap: 0;
+  max-width: 700px;
+  margin-bottom: 40px;
+}
+
+.seesaw-side { padding: 28px 24px; border: 1px solid rgba(255,255,255,0.08); }
+.seesaw-side.language-side { background: var(--orange); border-color: var(--orange); }
+.seesaw-side.price-side { background: rgba(255,255,255,0.04); }
+
+.ss-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 10px; }
+.language-side .ss-label { color: rgba(255,255,255,0.7); }
+.price-side .ss-label { color: rgba(255,255,255,0.3); }
+
+.ss-pct {
+  font-family: var(--serif);
+  font-size: 56px;
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.language-side .ss-pct { color: white; }
+.price-side .ss-pct { color: rgba(255,255,255,0.2); }
+
+.ss-desc { font-size: 13px; line-height: 1.5; font-style: italic; font-weight: 300; }
+.language-side .ss-desc { color: rgba(255,255,255,0.8); }
+.price-side .ss-desc { color: rgba(255,255,255,0.3); }
+
+.seesaw-pivot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--mono);
+  font-size: 9px;
+  color: rgba(255,255,255,0.2);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.pivot-icon { font-size: 22px; color: var(--orange); }
+.seesaw-source { font-family: var(--mono); font-size: 9px; color: rgba(255,255,255,0.2); letter-spacing: 0.08em; }
+
+/* ── ARABIC DATA ── */
+.arabic-section { padding: 100px 10vw; background: var(--paper); }
+
+.arabic-intro { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: end; margin-bottom: 60px; }
+.arabic-intro h2 { font-size: clamp(26px, 3.5vw, 44px); line-height: 1.15; font-weight: 700; }
+.arabic-intro h2 em { font-style: italic; font-weight: 300; color: var(--orange); }
+.arabic-intro p { font-size: 15px; line-height: 1.75; color: var(--muted); font-style: italic; font-weight: 300; }
+
+/* CTR comparison bars */
+.ctr-comparison { margin-bottom: 48px; }
+
+.ctr-compare-label {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 16px;
+  margin-bottom: 8px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  align-items: center;
+}
+
+.ctr-legend {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 20px;
+}
+
+.ctr-legend-item { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.ctr-legend-dot { width: 12px; height: 12px; }
+.ctr-legend-dot.en { background: var(--ink); }
+.ctr-legend-dot.ar { background: var(--orange); opacity: 0.6; }
+
+.section-row {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 16px;
+  margin-bottom: 10px;
+  align-items: center;
+}
+
+.section-name { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.06em; }
+
+.dual-bar { display: flex; flex-direction: column; gap: 3px; }
+
+.mini-bar-wrap { display: flex; align-items: center; gap: 8px; height: 14px; }
+
+.mini-bar {
+  height: 100%;
+  min-width: 2px;
+  transition: width 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+}
+
+.mini-bar.en { background: var(--ink); }
+.mini-bar.ar { background: var(--orange); opacity: 0.6; }
+
+.mini-val { font-family: var(--mono); font-size: 9px; color: var(--muted); white-space: nowrap; }
+
+/* AU comparison */
+.au-comparison {
+  background: var(--white);
+  padding: 36px;
+  border: 1px solid rgba(0,0,0,0.08);
+  margin-bottom: 28px;
+}
+
+.au-comparison h4 { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+.au-comparison .au-sub-head { font-size: 14px; color: var(--muted); font-style: italic; margin-bottom: 28px; }
+
+.au-bars { display: flex; flex-direction: column; gap: 16px; margin-bottom: 24px; }
+.au-row { display: flex; align-items: center; gap: 16px; }
+.au-site-label { font-family: var(--mono); font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); width: 160px; flex-shrink: 0; line-height: 1.4; }
+.au-bar-track { flex: 1; height: 36px; background: rgba(0,0,0,0.04); position: relative; display: flex; align-items: center; }
+.au-bar-fill { height: 100%; display: flex; align-items: center; padding-left: 12px; transition: width 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+.au-bar-fill.en { background: var(--ink); }
+.au-bar-fill.ar { background: var(--orange); opacity: 0.75; }
+.au-bar-val { font-family: var(--mono); font-size: 12px; font-weight: 500; color: white; }
+.au-insight { font-size: 14px; line-height: 1.65; color: #3A3530; font-style: italic; border-left: 3px solid var(--orange); padding-left: 16px; }
+.au-insight strong { font-style: normal; font-weight: 700; color: var(--ink); }
+
+/* ── REUTERS CAMPAIGNS ── */
+.evidence-section { padding: 80px 10vw; background: var(--white); }
+
+.evidence-intro { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: end; margin-bottom: 48px; padding-bottom: 40px; border-bottom: 1px solid rgba(0,0,0,0.1); }
+.evidence-intro h2 { font-size: clamp(26px, 3.5vw, 44px); line-height: 1.15; font-weight: 700; }
+.evidence-intro h2 em { font-style: italic; font-weight: 300; color: var(--orange); }
+.evidence-intro p { font-size: 15px; line-height: 1.75; color: var(--muted); font-style: italic; font-weight: 300; }
+
+.case-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; background: rgba(0,0,0,0.08); }
+.case-card { background: var(--white); padding: 36px; }
+.case-client { font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--orange); margin-bottom: 8px; }
+.case-card h3 { font-size: 20px; line-height: 1.25; font-weight: 700; margin-bottom: 24px; max-width: 320px; }
+
+.bar-chart { margin-bottom: 24px; }
+.bar-group { margin-bottom: 14px; }
+.bar-label { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; }
+.bar-label .name { color: var(--muted); text-transform: uppercase; }
+.bar-label .val { color: var(--ink); font-weight: 500; }
+.bar-label .val.highlight { color: var(--orange); }
+.bar-track { height: 8px; background: rgba(0,0,0,0.06); }
+.bar-fill { height: 100%; }
+.bar-fill.highlight { background: var(--orange); }
+.bar-fill.secondary { background: rgba(0,0,0,0.18); }
+
+.au-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+.au-card { padding: 14px; background: rgba(0,0,0,0.03); border-top: 2px solid rgba(0,0,0,0.08); }
+.au-card.hl { border-top-color: var(--orange); }
+.au-site { font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+.au-num { font-family: var(--serif); font-size: 36px; font-weight: 900; color: var(--ink); line-height: 1; margin-bottom: 3px; }
+.au-sub { font-size: 10px; color: var(--muted); font-style: italic; }
+
+.case-insight { font-size: 13px; line-height: 1.65; color: #3A3530; font-style: italic; font-weight: 300; border-left: 2px solid var(--orange); padding-left: 14px; }
+.case-insight strong { font-style: normal; font-weight: 700; color: var(--ink); }
+
+/* ── CLOSING ── */
+.closing { padding: 120px 10vw; background: var(--dark); color: white; }
+.closing h2 { font-size: clamp(32px, 5vw, 66px); line-height: 1.1; font-weight: 700; max-width: 800px; margin-bottom: 48px; }
+.closing h2 em { font-style: italic; font-weight: 300; color: var(--orange); }
+
+.closing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: rgba(255,255,255,0.05); margin-bottom: 80px; }
+.closing-point { background: var(--dark); padding: 28px 24px; border-top: 2px solid rgba(255,255,255,0.06); transition: border-color 0.3s; }
+.closing-point:hover { border-top-color: var(--orange); }
+.cp-num { font-family: var(--mono); font-size: 9px; color: var(--orange); letter-spacing: 0.2em; margin-bottom: 10px; }
+.closing-point p { font-size: 13px; line-height: 1.65; color: rgba(255,255,255,0.55); font-style: italic; font-weight: 300; }
+.closing-point p strong { font-style: normal; font-weight: 700; color: white; }
+
+.closing-footer { display: flex; justify-content: space-between; align-items: flex-end; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 28px; }
+.closing-meta { font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; color: rgba(255,255,255,0.18); line-height: 1.8; text-transform: uppercase; max-width: 700px; }
+.closing-brand { font-family: var(--serif); font-size: 32px; font-weight: 700; color: var(--orange); }
+
+/* ── REVEAL ── */
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.8s ease, transform 0.8s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.45s; }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-text">TRANSLATE</div>
+  <div class="hero-tag">Reuters Advertising · Internal Case · June 2026</div>
+  <h1>Lost in<br><em>translation.</em></h1>
+  <p class="hero-sub">When campaigns target non-English speaking markets, language isn't a detail. It's the difference between being heard and being ignored.</p>
+  <div class="hero-scroll"><div class="scroll-line"></div>scroll to explore</div>
+</section>
+
+<!-- CH 1 -->
+<div class="chapter reveal"><span class="chapter-num">01</span><div class="chapter-line"></div><span class="chapter-title">Our position</span></div>
+
+<section>
+  <div class="thesis reveal reveal-delay-1">
+    <div class="thesis-statement">Not every campaign needs translation.<br><em>But some absolutely do.</em></div>
+    <div class="thesis-explanation">For global campaigns, English as a lingua franca makes sense. But when a client wants to reach a <strong>specific non-English speaking market</strong> — France, Germany, Japan, the Middle East, Latin America — serving English-only content is an active performance handicap. The data is unambiguous.</div>
+  </div>
+  <div class="position-split reveal reveal-delay-2">
+    <div class="pos-panel global">
+      <span class="pos-tag">Global campaigns</span>
+      <h3>English as lingua franca</h3>
+      <p>Multi-market campaigns across mixed-language environments. <strong>English-first is appropriate</strong> — broad reach where no single language dominates.</p>
+      <span class="pos-arrow">Standard practice ✓</span>
+    </div>
+    <div class="pos-panel targeted">
+      <span class="pos-tag">Market-specific campaigns → our focus</span>
+      <h3>Translation as the default</h3>
+      <p>A client targeting France, Germany, the Middle East, or Japan. English-only creative enters a <strong>local-language environment</strong> where it will underperform — sometimes dramatically.</p>
+      <span class="pos-arrow">Where the opportunity is →</span>
+    </div>
+  </div>
+</section>
+
+<div class="orange-divider" style="margin-top:80px;"></div>
+
+<!-- CH 2 -->
+<div class="chapter reveal" style="padding-top:80px;"><span class="chapter-num">02</span><div class="chapter-line"></div><span class="chapter-title">What the research says</span></div>
+
+<!-- 39% big stat -->
+<section class="big-stat-section reveal">
+  <div class="big-number">39%</div>
+  <div class="big-stat-text">
+    <div class="stat-context">Gerritsen et al., 2010 · 715 consumers · Western Europe</div>
+    <h3>of English phrases in targeted ads were not understood by the audience.</h3>
+    <p>Even among highly educated, relatively English-proficient audiences in non-anglophone markets, nearly 4 in 10 ad messages simply didn't register. No compensating benefit to brand image. The message was lost with nothing gained.</p>
+    <div class="source-tag">Gerritsen, M. et al. (2010). English in Product Advertisements in Non-English-Speaking Countries in Western Europe. n=715.</div>
+  </div>
+</section>
+
+<!-- Word cloud -->
+<section class="comprehension-section">
+  <div class="section-intro reveal">
+    <h2>What does 39% <em>actually look like?</em></h2>
+    <p>Imagine a typical ad message — ten words or phrases. In a targeted non-English market, nearly four of them evaporate. The audience sees the words. They just don't receive the meaning.</p>
+  </div>
+  <div class="word-cloud reveal reveal-delay-1" id="wordCloud">
+    <div class="word understood">Premium quality</div>
+    <div class="word understood">Trusted globally</div>
+    <div class="word missed" id="w1">Unrivalled insight</div>
+    <div class="word understood">Invest smarter</div>
+    <div class="word missed" id="w2">Decision-ready</div>
+    <div class="word understood">Market leaders</div>
+    <div class="word missed" id="w3">Actionable intelligence</div>
+    <div class="word understood">World-class</div>
+    <div class="word understood">Industry-leading</div>
+    <div class="word missed" id="w4">Cutting-edge solutions</div>
+  </div>
+  <div class="word-legend reveal reveal-delay-2">
+    <div class="legend-item"><div class="legend-dot understood"></div>Message received</div>
+    <div class="legend-item"><div class="legend-dot missed"></div>Lost on the audience</div>
+  </div>
+  <div class="comprehension-source reveal reveal-delay-3">Illustration based on Gerritsen et al. (2010) — 39% average comprehension failure across non-anglophone European markets</div>
+</section>
+
+<!-- 81% people grid -->
+<section class="people-section">
+  <div class="people-intro reveal">
+    <h2><em>81 out of 100</em> B2B buyers prefer to purchase in their own language.</h2>
+    <p>This isn't a marginal preference. Across 24 countries, business buyers overwhelmingly chose native-language content — even those who rated their English proficiency as high. Fluency and preference are not the same thing.</p>
+  </div>
+
+  <div class="people-grid reveal reveal-delay-1" id="peopleGrid"></div>
+
+  <div class="people-stats reveal reveal-delay-2">
+    <div class="pstat">
+      <div class="pnum">81%</div>
+      <div class="pdesc">more likely to purchase with local-language presales content</div>
+      <div class="psrc">CSA Research B2B, 2020 · n=956 · 24 countries</div>
+    </div>
+    <div class="pstat">
+      <div class="pnum">67%</div>
+      <div class="pdesc">would pay up to 30% more for a localised solution</div>
+      <div class="psrc">CSA Research B2B, 2020</div>
+    </div>
+    <div class="pstat">
+      <div class="pnum">80%</div>
+      <div class="pdesc">of companies officially communicate in their national language — not English</div>
+      <div class="psrc">CSA Research B2B, 2020</div>
+    </div>
+  </div>
+</section>
+
+<!-- Seesaw: language vs price -->
+<section class="seesaw-section">
+  <div class="seesaw-intro reveal">
+    <h2>Language beats <em>price.</em></h2>
+    <p>Of all the factors that influence a buying decision, more than half of global consumers rank access to information in their own language above price. Not features. Not reputation. Price.</p>
+  </div>
+
+  <div class="seesaw-viz reveal reveal-delay-1">
+    <div class="seesaw-side language-side">
+      <div class="ss-label">Language access</div>
+      <div class="ss-pct">56.2%</div>
+      <div class="ss-desc">say language is more important than price</div>
+    </div>
+    <div class="seesaw-pivot">
+      <div class="pivot-icon">⚖</div>
+      <span>vs</span>
+    </div>
+    <div class="seesaw-side price-side">
+      <div class="ss-label">Price</div>
+      <div class="ss-pct" style="font-size:36px; margin-top:10px;">43.8%</div>
+      <div class="ss-desc">put price first</div>
+    </div>
+  </div>
+  <div class="seesaw-source reveal reveal-delay-2">Kelly / Common Sense Advisory (2012) — 2,430 consumers, 8 countries · 72.4% also more likely to buy when content is in their own language</div>
+</section>
+
+<div class="orange-divider"></div>
+
+<!-- CH 3: Arabic site data -->
+<div class="chapter reveal" style="padding-top:80px;"><span class="chapter-num">03</span><div class="chapter-line"></div><span class="chapter-title">Reuters platform data</span></div>
+
+<section class="arabic-section">
+  <div class="arabic-intro reveal">
+    <div>
+      <h2>English ads on an Arabic site.<br><em>The gap is everywhere.</em></h2>
+    </div>
+    <p>Reuters.com/ar serves Arabic-speaking audiences. All ads are in English. We compared CTR and Attention Score across every content section — the story is consistent throughout.</p>
+  </div>
+
+  <!-- CTR section comparison -->
+  <div class="ctr-comparison reveal reveal-delay-1">
+    <div class="ctr-legend">
+      <div class="ctr-legend-item"><div class="ctr-legend-dot en"></div>reuters.com (English site, English ads)</div>
+      <div class="ctr-legend-item"><div class="ctr-legend-dot ar"></div>reuters.com/ar (Arabic site, English ads)</div>
+    </div>
+
+    <div id="sectionBars"></div>
+  </div>
+
+  <!-- AU comparison -->
+  <div class="au-comparison reveal reveal-delay-2">
+    <h4>But the attention is there.</h4>
+    <div class="au-sub-head">Attention Scores (AU) are almost identical across both sites — the Arabic-site audience is just as engaged with the content.</div>
+    <div class="au-bars">
+      <div class="au-row">
+        <div class="au-site-label">reuters.com<br>English site</div>
+        <div class="au-bar-track">
+          <div class="au-bar-fill en" id="auBarEn" style="width:0%">
+            <span class="au-bar-val">30.48</span>
+          </div>
+        </div>
+      </div>
+      <div class="au-row">
+        <div class="au-site-label">reuters.com/ar<br>Arabic site</div>
+        <div class="au-bar-track">
+          <div class="au-bar-fill ar" id="auBarAr" style="width:0%">
+            <span class="au-bar-val">29.49</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="au-insight">The Arabic-site audience scores <strong>29.49 AU vs 30.48</strong> on the English site — a difference of less than 1 point. The audience is paying attention. <strong>The language mismatch is the only barrier to conversion.</strong></div>
+  </div>
+
+  <!-- Overall CTR delta callout -->
+  <div class="big-stat-section reveal" style="margin: 0 0 0 0; padding: 60px 40px; background: var(--dark);">
+    <div class="big-number" style="font-size: clamp(80px, 10vw, 140px);">5.4×</div>
+    <div class="big-stat-text">
+      <div class="stat-context">Reuters internal data · reuters.com vs reuters.com/ar</div>
+      <h3>lower CTR on the Arabic site, despite near-identical attention scores.</h3>
+      <p>English site CTR: 0.0735% across 8.3 billion impressions. Arabic site CTR: 0.0135% across 3 million impressions. Same content. Same editorial quality. Same audience attentiveness. <strong>Different language. Dramatically different results.</strong></p>
+      <div class="source-tag">Source: Reuters internal campaign data, 2026. INTL = reuters.com (English). QA INTL = reuters.com/ar (Arabic).</div>
+    </div>
+  </div>
+</section>
+
+<!-- CH 4: IDA Ireland -->
+<div class="chapter reveal" style="padding-top:0; margin-top: 0; background: var(--dark); padding-bottom: 0;">
+  <span class="chapter-num" style="color: var(--orange);">04</span>
+  <div class="chapter-line" style="background: rgba(255,255,255,0.1);"></div>
+  <span class="chapter-title" style="color: rgba(255,255,255,0.3);">Reuters campaign evidence</span>
+</div>
+
+<section class="evidence-section" style="padding-top: 60px;">
+  <div class="evidence-intro reveal">
+    <h2>We've seen this on <em>our own campaigns.</em></h2>
+    <p>IDA Ireland ran across Japan and South Korea simultaneously. Japan had localised assets. South Korea didn't. The data tells the same story — attention captured, conversion lost.</p>
+  </div>
+
+  <div class="case-cards reveal reveal-delay-1">
+    <div class="case-card">
+      <div class="case-client">IDA Ireland · Japan · Localised</div>
+      <h3>Japanese-language creatives + JP.Reuters.com placement</h3>
+      <div class="bar-chart">
+        <div class="bar-group">
+          <div class="bar-label"><span class="name">CTR</span><span class="val highlight">0.09%</span></div>
+          <div class="bar-track"><div class="bar-fill highlight" style="width:90%"></div></div>
+        </div>
+        <div class="bar-group">
+          <div class="bar-label"><span class="name">Video completion rate</span><span class="val highlight">~60%</span></div>
+          <div class="bar-track"><div class="bar-fill highlight" style="width:80%"></div></div>
+        </div>
+        <div class="bar-group">
+          <div class="bar-label"><span class="name">Impression share</span><span class="val highlight">80%</span></div>
+          <div class="bar-track"><div class="bar-fill highlight" style="width:80%"></div></div>
+        </div>
+      </div>
+      <div class="au-pair">
+        <div class="au-card">
+          <div class="au-site">Attention Score</div>
+          <div class="au-num">30.5</div>
+          <div class="au-sub">Japan · Localised</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="case-card">
+      <div class="case-client">IDA Ireland · South Korea · English only</div>
+      <h3>English creatives, reuters.com placement — attention without conversion</h3>
+      <div class="bar-chart">
+        <div class="bar-group">
+          <div class="bar-label"><span class="name">CTR</span><span class="val">0.06%</span></div>
+          <div class="bar-track"><div class="bar-fill secondary" style="width:60%"></div></div>
+        </div>
+        <div class="bar-group">
+          <div class="bar-label"><span class="name">Video completion rate</span><span class="val">~48%</span></div>
+          <div class="bar-track"><div class="bar-fill secondary" style="width:64%"></div></div>
+        </div>
+        <div class="bar-group">
+          <div class="bar-label"><span class="name">Impression share</span><span class="val">20%</span></div>
+          <div class="bar-track"><div class="bar-fill secondary" style="width:20%"></div></div>
+        </div>
+      </div>
+      <div class="au-pair">
+        <div class="au-card hl">
+          <div class="au-site">Attention Score</div>
+          <div class="au-num">31.5</div>
+          <div class="au-sub">South Korea · higher than Japan</div>
+        </div>
+      </div>
+      <div class="case-insight">South Korea's AU is actually <strong>higher than Japan's</strong>. The audience was paying attention — but without Korean-language assets, that attention didn't convert into clicks or completions. <strong>This is a direct performance unlock waiting to happen.</strong></div>
+    </div>
+  </div>
+</section>
+
+<!-- CLOSING -->
+<section class="closing">
+  <h2 class="reveal">The attention is there.<br>The language <em>is the barrier.</em></h2>
+  <div class="closing-grid">
+    <div class="closing-point reveal reveal-delay-1"><div class="cp-num">01</div><p>When a campaign targets a specific non-English speaking market, <strong>translation should be the recommended default</strong> — not an optional extra.</p></div>
+    <div class="closing-point reveal reveal-delay-2"><div class="cp-num">02</div><p>Work with Product to build a <strong>scalable AI-assisted, human-reviewed translation workflow</strong> priced into market-specific packages from the outset.</p></div>
+    <div class="closing-point reveal reveal-delay-3"><div class="cp-num">03</div><p><strong>Reuters.com/ar is already a natural test bed.</strong> Arabic-language ads on that site would be a direct, measurable experiment we can run now.</p></div>
+    <div class="closing-point reveal reveal-delay-1"><div class="cp-num">04</div><p>Equip sales teams globally with this evidence. <strong>The IDA Ireland and Arabic site data</strong> belong in every relevant client conversation.</p></div>
+    <div class="closing-point reveal reveal-delay-2"><div class="cp-num">05</div><p>Audit existing market-specific campaigns running English-only. <strong>Where are we capping client performance</strong> by not recommending translation?</p></div>
+    <div class="closing-point reveal reveal-delay-3"><div class="cp-num">06</div><p>Frame translation as a <strong>performance line item, not a cost</strong>. 67% of B2B buyers pay up to 30% more for localised solutions. The evidence makes the case.</p></div>
+  </div>
+  <div class="closing-footer">
+    <div class="closing-meta">Sources: Gerritsen et al. (2010) · CSA Research / Kantar (2020) · Kelly / Common Sense Advisory (2012) · Flores, Chen & Ross (2014) · He (2026) · Fannouna (2025) · Reuters internal campaign data: IDA Ireland (JP/KR) and reuters.com/ar performance analysis (2026)</div>
+    <div class="closing-brand">Reuters</div>
+  </div>
+</section>
+
+<script>
+// ── SCROLL REVEAL ──
+const revealEls = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+revealEls.forEach(el => io.observe(el));
+
+// ── WORD CLOUD ANIMATION ──
+const missedWords = document.querySelectorAll('.word.missed');
+const wordCloud = document.getElementById('wordCloud');
+const wordObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      missedWords.forEach((w, i) => {
+        setTimeout(() => w.classList.add('animate'), 400 + i * 200);
+      });
+      wordObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.5 });
+wordObs.observe(wordCloud);
+
+// ── PEOPLE GRID ──
+const grid = document.getElementById('peopleGrid');
+for (let i = 0; i < 100; i++) {
+  const p = document.createElement('div');
+  p.className = 'person inactive';
+  p.textContent = '●';
+  p.style.fontSize = '20px';
+  p.style.color = i < 81 ? 'transparent' : 'rgba(0,0,0,0.1)';
+  grid.appendChild(p);
+}
+
+const gridObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const people = grid.querySelectorAll('.person');
+      people.forEach((p, i) => {
+        setTimeout(() => {
+          if (i < 81) {
+            p.classList.remove('inactive');
+            p.classList.add('active');
+            p.style.color = 'transparent';
+          }
+        }, i * 18);
+      });
+      gridObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.3 });
+gridObs.observe(grid);
+
+// ── SECTION BARS (Arabic site CTR) ──
+const sectionData = [
+  { name: '/business',    en: 0.0730, ar: 0.0144 },
+  { name: '/home',        en: 0.0844, ar: 0.0264 },
+  { name: '/markets',     en: 0.0637, ar: 0.0150 },
+  { name: '/legal',       en: 0.0704, ar: 0.0294 },
+  { name: '/lifestyle',   en: 0.1073, ar: 0.0131 },
+  { name: '/breakingviews', en: 0.0589, ar: 0.0045 },
+  { name: '/commentary',  en: 0.0604, ar: 0.0024 },
+  { name: '/fact-check',  en: 0.0681, ar: 0.0009 },
+];
+
+const maxCTR = Math.max(...sectionData.map(d => d.en));
+const barsContainer = document.getElementById('sectionBars');
+
+sectionData.forEach(d => {
+  const row = document.createElement('div');
+  row.className = 'section-row';
+  row.innerHTML = `
+    <div class="section-name">${d.name}</div>
+    <div class="dual-bar">
+      <div class="mini-bar-wrap">
+        <div class="mini-bar en" style="width:${(d.en/maxCTR)*100}%"></div>
+        <span class="mini-val">${d.en.toFixed(4)}%</span>
+      </div>
+      <div class="mini-bar-wrap">
+        <div class="mini-bar ar" style="width:${(d.ar/maxCTR)*100}%"></div>
+        <span class="mini-val">${d.ar.toFixed(4)}%</span>
+      </div>
+    </div>
+  `;
+  barsContainer.appendChild(row);
+});
+
+// ── AU BARS ANIMATE ──
+const auBarEn = document.getElementById('auBarEn');
+const auBarAr = document.getElementById('auBarAr');
+
+const auObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      auBarEn.style.width = '97%';
+      auBarAr.style.width = '94%';
+      auObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.4 });
+if (auBarEn) auObs.observe(auBarEn.closest('.au-comparison'));
+</script>
+</body>
+</html>
