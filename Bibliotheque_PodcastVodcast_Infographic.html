@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bibliothèque — On Air: Podcast & Vodcast Advertising</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Sans+Condensed:wght@300;400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --orange:#D64000;--green:#123015;--ink:#123015;--dark:#123015;--parch:#F5F0E4;
+  --paper:#FAF7F0;--cream:#FDFBF6;--muted:#5A7A5C;--rule:rgba(18,48,21,0.10);
+  --rule-dk:rgba(255,255,255,0.08);
+  --bask:'Libre Baskerville',Georgia,serif;
+  --cond:'IBM Plex Sans Condensed',Arial Narrow,sans-serif;
+  --mono:'IBM Plex Mono','Courier New',monospace;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{font-size:16px;scroll-behavior:smooth;}
+body{font-family:var(--bask);background:var(--parch);color:var(--ink);overflow-x:hidden;}
+
+/* TICKER */
+.ticker-wrap{position:sticky;top:0;z-index:100;background:var(--dark);overflow:hidden;height:26px;display:flex;align-items:center;}
+.ticker-track{display:flex;white-space:nowrap;animation:tick 60s linear infinite;}
+.ticker-track:hover{animation-play-state:paused;}
+.tick-item{font-family:var(--mono);font-size:8.5px;color:rgba(255,255,255,0.45);letter-spacing:0.1em;text-transform:uppercase;padding-right:52px;flex-shrink:0;}
+.tick-item::before{content:'▸  ';color:var(--orange);}
+@keyframes tick{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+
+/* DATELINE */
+.dateline{background:var(--orange);padding:5px 7vw;display:flex;align-items:center;gap:14px;}
+.dl-city{font-family:var(--cond);font-size:10px;font-weight:700;letter-spacing:0.22em;color:white;text-transform:uppercase;}
+.dl-sep{width:1px;height:13px;background:rgba(255,255,255,0.35);flex-shrink:0;}
+.dl-time{font-family:var(--mono);font-size:8.5px;color:rgba(255,255,255,0.75);letter-spacing:0.08em;}
+.dl-ref{font-family:var(--mono);font-size:8.5px;color:rgba(255,255,255,0.4);letter-spacing:0.1em;text-transform:uppercase;margin-left:auto;}
+
+/* SECTIONS */
+.s-dark{background:var(--dark);padding:72px 7vw;border-bottom:1px solid var(--rule-dk);}
+.s-parch{background:var(--parch);padding:72px 7vw;border-bottom:1px solid var(--rule);}
+.s-paper{background:var(--paper);padding:72px 7vw;border-bottom:1px solid var(--rule);}
+.s-cream{background:var(--cream);padding:72px 7vw;border-bottom:1px solid var(--rule);}
+
+/* CHAPTER */
+.chapter{display:flex;align-items:center;gap:14px;margin-bottom:44px;}
+.ch-num{font-family:var(--mono);font-size:9px;color:var(--orange);letter-spacing:0.2em;text-transform:uppercase;flex-shrink:0;}
+.ch-rule{flex:1;height:1px;background:var(--rule);}
+.ch-rule-dk{flex:1;height:1px;background:var(--rule-dk);}
+.ch-title{font-family:var(--cond);font-size:9px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);flex-shrink:0;}
+.ch-title-dk{color:rgba(255,255,255,0.28);}
+
+/* BYLINE */
+.byline{font-family:var(--cond);font-size:9px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--rule);padding-bottom:7px;margin-bottom:14px;}
+.byline-dk{color:rgba(255,255,255,0.28);border-bottom-color:var(--rule-dk);}
+
+/* HERO */
+.hero{background:var(--dark);padding:64px 7vw 72px;position:relative;overflow:hidden;}
+.hero-ghost{position:absolute;right:-1%;top:50%;transform:translateY(-50%);font-family:var(--cond);font-size:clamp(70px,13vw,150px);font-weight:700;color:rgba(255,255,255,0.022);letter-spacing:-0.04em;pointer-events:none;white-space:nowrap;line-height:1;}
+.hero-tag{font-family:var(--mono);font-size:8.5px;letter-spacing:0.22em;color:var(--orange);text-transform:uppercase;margin-bottom:18px;}
+.hero-hed{font-family:var(--bask);font-size:clamp(38px,5.5vw,68px);font-weight:700;color:white;line-height:1.0;margin-bottom:14px;max-width:780px;}
+.hero-hed em{font-style:italic;font-weight:400;color:var(--orange);}
+.hero-deck{font-family:var(--cond);font-size:clamp(13px,1.2vw,16px);line-height:1.55;color:rgba(255,255,255,0.48);max-width:540px;border-left:3px solid var(--orange);padding-left:13px;margin-bottom:44px;}
+.hero-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:2px;max-width:860px;}
+.hero-stat{background:rgba(255,255,255,0.04);padding:18px 20px;border-top:2px solid rgba(255,255,255,0.05);}
+.hero-stat.accent{border-top-color:var(--orange);}
+.hero-stat-num{font-family:var(--bask);font-weight:700;font-size:clamp(30px,3.8vw,48px);color:var(--orange);line-height:0.95;letter-spacing:-0.02em;}
+.hero-stat-label{font-family:var(--bask);font-style:italic;font-size:10.5px;color:rgba(255,255,255,0.35);margin-top:6px;line-height:1.5;}
+
+/* ORANGE RULE */
+.orule{height:3px;background:var(--orange);}
+
+/* GRIDS */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:start;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:32px;align-items:start;}
+.g2-3{display:grid;grid-template-columns:3fr 2fr;gap:52px;align-items:start;}
+@media(max-width:760px){.g2,.g3,.g2-3{grid-template-columns:1fr;gap:28px;}}
+
+/* TYPOGRAPHY */
+.hed-xl{font-family:var(--bask);font-weight:700;font-size:clamp(30px,4vw,54px);line-height:1.05;color:white;margin-bottom:14px;}
+.hed-xl em{font-style:italic;font-weight:400;color:var(--orange);}
+.hed-lg{font-family:var(--bask);font-weight:700;font-size:clamp(24px,2.8vw,38px);line-height:1.1;color:var(--ink);margin-bottom:12px;}
+.hed-lg em{font-style:italic;font-weight:400;color:var(--orange);}
+.hed-lg-dk{color:white;}
+.lede{font-family:var(--bask);font-style:italic;font-size:clamp(12px,1vw,14px);line-height:1.82;color:#3A3020;margin-bottom:14px;}
+.lede strong{font-style:normal;font-weight:700;color:var(--ink);}
+.lede-dk{color:rgba(255,255,255,0.45);}
+.lede-dk strong{color:white;}
+.src{font-family:var(--mono);font-size:7.5px;color:rgba(0,0,0,0.26);letter-spacing:0.1em;text-transform:uppercase;line-height:1.6;margin-top:8px;}
+.src-dk{color:rgba(255,255,255,0.2);}
+
+/* STAT COMPONENTS */
+.stat-xl{font-family:var(--bask);font-weight:700;color:var(--orange);line-height:0.9;letter-spacing:-0.02em;font-size:clamp(60px,7.5vw,90px);}
+.stat-xl sup{font-size:0.4em;vertical-align:super;}
+.stat-lg{font-family:var(--bask);font-weight:700;color:var(--orange);line-height:0.9;letter-spacing:-0.02em;font-size:clamp(40px,5vw,62px);}
+.stat-lg sup{font-size:0.42em;vertical-align:super;}
+.stat-label{font-family:var(--bask);font-style:italic;font-size:11.5px;color:rgba(255,255,255,0.36);line-height:1.55;margin-top:9px;}
+.inline-num{font-family:var(--cond);font-size:clamp(26px,3.2vw,38px);font-weight:700;color:var(--orange);line-height:1;}
+.inline-lbl{font-family:var(--bask);font-style:italic;font-size:11px;color:var(--muted);line-height:1.45;margin-top:4px;max-width:170px;}
+
+/* CALLOUT */
+.callout{border-left:3px solid var(--orange);padding:13px 16px;background:rgba(214,64,0,0.055);}
+.callout p{font-family:var(--bask);font-style:italic;font-size:12.5px;line-height:1.7;color:#3A3020;}
+.callout p strong{font-style:normal;font-weight:700;color:var(--ink);}
+.callout-dk{background:rgba(255,255,255,0.04);border-left-color:var(--orange);}
+.callout-dk p{color:rgba(255,255,255,0.45);}
+.callout-dk p strong{color:white;}
+
+/* ANIMATED BAR */
+.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:9px;}
+.bar-lbl{font-family:var(--cond);font-size:9px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.45);width:96px;flex-shrink:0;text-align:right;}
+.bar-lbl.hi{color:var(--orange);}
+.bar-track{flex:1;height:5px;background:rgba(255,255,255,0.07);}
+.bar-fill{height:100%;width:0;background:var(--muted);transition:width 1.2s cubic-bezier(.4,0,.2,1);}
+.bar-fill.hi{background:var(--orange);}
+.bar-val{font-family:var(--mono);font-size:9.5px;color:rgba(255,255,255,0.45);width:36px;flex-shrink:0;}
+.bar-val.hi{color:var(--orange);}
+
+/* DISPATCH CARDS */
+.dispatch-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:2px;background:rgba(255,255,255,0.06);}
+.dispatch-card{background:var(--dark);padding:20px 20px 22px;border-top:2px solid rgba(255,255,255,0.05);transition:border-top-color 0.2s,background 0.2s;}
+.dispatch-card:hover{border-top-color:var(--orange);background:rgba(255,255,255,0.03);}
+.d-num{font-family:var(--mono);font-size:8.5px;color:var(--orange);letter-spacing:0.2em;margin-bottom:9px;}
+.dispatch-card p{font-family:var(--bask);font-size:11.5px;font-style:italic;line-height:1.65;color:rgba(255,255,255,0.42);}
+.dispatch-card p strong{font-style:normal;color:white;}
+
+/* AUDIENCE GRID */
+.aud-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:rgba(255,255,255,0.06);}
+.aud-cell{background:var(--dark);padding:16px 18px;}
+.aud-lbl{font-family:var(--mono);font-size:7.5px;color:rgba(255,255,255,0.22);letter-spacing:0.18em;text-transform:uppercase;margin-bottom:5px;}
+.aud-val{font-family:var(--cond);font-size:22px;font-weight:700;color:var(--orange);line-height:1;}
+.aud-note{font-family:var(--bask);font-style:italic;font-size:9.5px;color:rgba(255,255,255,0.28);margin-top:3px;line-height:1.4;}
+
+/* COUNTER animation */
+.count-target{display:inline;}
+
+/* SCROLL REVEAL */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity 0.7s ease,transform 0.7s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.reveal-delay-1{transition-delay:0.1s;}
+.reveal-delay-2{transition-delay:0.2s;}
+.reveal-delay-3{transition-delay:0.3s;}
+.reveal-delay-4{transition-delay:0.4s;}
+
+/* PROGRESS BAR (reading) */
+.progress-bar{position:fixed;top:0;left:0;height:2px;background:var(--orange);z-index:200;width:0%;transition:width 0.1s linear;}
+
+/* FOOTER */
+.footer{background:var(--dark);padding:24px 7vw;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--rule-dk);}
+.footer-meta{font-family:var(--mono);font-size:7.5px;color:rgba(255,255,255,0.18);letter-spacing:0.1em;line-height:1.8;}
+.footer-brand{font-family:var(--cond);font-weight:700;font-size:17px;color:var(--orange);letter-spacing:0.08em;}
+
+/* GENRE CARDS */
+.genre-card{padding:20px 0;border-top:1px solid var(--rule-dk);}
+.genre-card:first-child{border-top:none;padding-top:0;}
+.genre-idx{font-family:var(--cond);font-size:clamp(24px,3vw,36px);font-weight:700;color:var(--orange);line-height:1;}
+
+/* HIGHLIGHT BAND */
+.highlight-band{background:rgba(214,64,0,0.08);border-left:3px solid var(--orange);padding:14px 18px;margin-top:20px;}
+.highlight-band p{font-family:var(--cond);font-size:13px;font-weight:600;letter-spacing:0.04em;color:var(--ink);line-height:1.5;}
+
+/* PERCEPTION ROWS */
+.perc-row{margin-bottom:14px;}
+.perc-head{display:flex;justify-content:space-between;margin-bottom:5px;}
+.perc-name{font-family:var(--cond);font-size:9px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);}
+.perc-val{font-family:var(--mono);font-size:9.5px;color:var(--orange);}
+.perc-track{height:4px;background:var(--rule);}
+.perc-fill{height:100%;width:0;background:var(--orange);transition:width 1.3s cubic-bezier(.4,0,.2,1);}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="prog"></div>
+
+<!-- STICKY TICKER -->
+<div class="ticker-wrap" aria-hidden="true">
+  <div class="ticker-track" id="ticker">
+    <span class="tick-item">68% of US online adults listen to podcasts in 2025 · Forrester</span>
+    <span class="tick-item">Podcast ads generate 2× the attention of TV · dentsu Attention Economy</span>
+    <span class="tick-item">Host-read ads average 14.2s of attention — beating a 30-second TV spot · dentsu / Lumen 2023</span>
+    <span class="tick-item">Nielsen: podcast ads drive +13pt brand awareness lift and 71% aided recall · 1,000+ US campaigns</span>
+    <span class="tick-item">43% of UK adults listen to ad-supported podcasts monthly · Sounds Profitable 2026</span>
+    <span class="tick-item">79% of UK listeners recall a podcast ad in the past week · Sounds Profitable 2026</span>
+    <span class="tick-item">8 in 10 podcast listeners trust host recommendations · iHeartMedia</span>
+    <span class="tick-item">Podcast ads rank #1 for trust across all legacy media · UK Advertising Landscape 2026</span>
+    <span class="tick-item">Parasocial host relationships lower ad scepticism and increase brand information-seeking · Journal of Consumer Marketing 2023</span>
+    <span class="tick-item">67% of global listeners made a direct purchase from a host recommendation · Acast 2025</span>
+    <span class="tick-item">85% of daily podcast audiences took brand action after listening · Acast 2025</span>
+    <span class="tick-item">UK spends £0.18 per listener-hour vs. £0.94 in the US — 5.2× headroom · Sounds Profitable</span>
+    <span class="tick-item">Video extends podcast reach by 39% among global consumers · Acast 2025</span>
+    <span class="tick-item">Nielsen podcast brand lift studies: consistent +11pt awareness, +7pt purchase intent, +6pt recommendation</span>
+    <span class="tick-item">68% of US online adults listen to podcasts in 2025 · Forrester</span>
+    <span class="tick-item">Podcast ads generate 2× the attention of TV · dentsu Attention Economy</span>
+    <span class="tick-item">Host-read ads average 14.2s of attention — beating a 30-second TV spot · dentsu / Lumen 2023</span>
+    <span class="tick-item">Nielsen: podcast ads drive +13pt brand awareness lift and 71% aided recall · 1,000+ US campaigns</span>
+    <span class="tick-item">43% of UK adults listen to ad-supported podcasts monthly · Sounds Profitable 2026</span>
+    <span class="tick-item">79% of UK listeners recall a podcast ad in the past week · Sounds Profitable 2026</span>
+    <span class="tick-item">8 in 10 podcast listeners trust host recommendations · iHeartMedia</span>
+    <span class="tick-item">Podcast ads rank #1 for trust across all legacy media · UK Advertising Landscape 2026</span>
+    <span class="tick-item">Parasocial host relationships lower ad scepticism and increase brand information-seeking · Journal of Consumer Marketing 2023</span>
+    <span class="tick-item">67% of global listeners made a direct purchase from a host recommendation · Acast 2025</span>
+    <span class="tick-item">85% of daily podcast audiences took brand action after listening · Acast 2025</span>
+    <span class="tick-item">UK spends £0.18 per listener-hour vs. £0.94 in the US — 5.2× headroom · Sounds Profitable</span>
+    <span class="tick-item">Video extends podcast reach by 39% among global consumers · Acast 2025</span>
+    <span class="tick-item">Nielsen podcast brand lift studies: consistent +11pt awareness, +7pt purchase intent, +6pt recommendation</span>
+  </div>
+</div>
+
+<!-- DATELINE -->
+<div class="dateline">
+  <span class="dl-city">Reuters Advertising</span>
+  <div class="dl-sep"></div>
+  <span class="dl-time" id="dl-time">—</span>
+  <span class="dl-ref">Bibliothèque · Ref 002</span>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-ghost">ON AIR</div>
+  <div class="hero-tag">Reuters Advertising · EMEA Intelligence · Bibliothèque Dispatch 002</div>
+  <h1 class="hero-hed">On Air.<br><em>The case for podcast<br>&amp; vodcast advertising.</em></h1>
+  <p class="hero-deck">Audiences are habitual. Attention is earned. Trust runs higher than any other media channel. And the spend hasn't caught up yet.</p>
+  <div class="hero-stats">
+    <div class="hero-stat accent reveal">
+      <div class="hero-stat-num"><span class="count-target" data-target="68">0</span>%</div>
+      <div class="hero-stat-label">of US online adults now listen to podcasts — up from 58% in 2022</div>
+    </div>
+    <div class="hero-stat reveal reveal-delay-1">
+      <div class="hero-stat-num"><span class="count-target" data-target="43">0</span>%</div>
+      <div class="hero-stat-label">of UK adults listen to ad-supported podcasts monthly</div>
+    </div>
+    <div class="hero-stat reveal reveal-delay-2">
+      <div class="hero-stat-num">2×</div>
+      <div class="hero-stat-label">more attention than TV ads · dentsu Attention Economy</div>
+    </div>
+    <div class="hero-stat reveal reveal-delay-3">
+      <div class="hero-stat-num">$2.6B</div>
+      <div class="hero-stat-label">projected global podcast ad market by 2026 · IAB</div>
+    </div>
+  </div>
+</section>
+
+<div class="orule"></div>
+
+<!-- DISPATCH 01: THE INFLECTION POINT -->
+<section class="s-parch">
+  <div class="chapter">
+    <span class="ch-num">Dispatch 01</span>
+    <div class="ch-rule"></div>
+    <span class="ch-title">The inflection point</span>
+  </div>
+  <div class="g2-3">
+    <div class="reveal">
+      <div class="byline">Reuters Advertising · EMEA Intelligence</div>
+      <h2 class="hed-lg">Podcasting is no longer a channel. <em>It is a content genre.</em></h2>
+      <p class="lede">The format has crossed from niche to mainstream. Cultural moments now begin in podcasts and ripple outward. Appearances that once went to late-night television go to podcasts first. The intimate, long-form format lets decision-makers, analysts and business leaders speak at length — exactly the audience Reuters clients want to reach.</p>
+      <p class="lede"><strong>One billion people watch podcasts on YouTube every month.</strong> The definition of "podcast" has expanded to include video, live events, social clips and exclusive communities. Brands can now reach B2B audiences at every point in their day — commute, desk, gym, screen.</p>
+      <div class="src">Forrester Research · The Podcast Advertising Inflection Point · December 2025</div>
+    </div>
+    <div class="reveal reveal-delay-1">
+      <div class="callout" style="margin-bottom:22px;">
+        <p><strong>"Podcast is social, podcast is in real life, podcast is video, and podcast is certainly still audio."</strong> Consumers think of podcasters as a very particular type of content creator.</p>
+      </div>
+      <div class="src" style="margin-bottom:20px;">Matt Shapo, IAB · via Forrester</div>
+      <div class="callout">
+        <p>Live podcast event tickets are up <strong>500% year on year.</strong> These are not niche audiences. They are the same decision-makers who read Reuters.</p>
+      </div>
+      <div class="src">Forrester Research · 2025</div>
+    </div>
+  </div>
+
+  <div style="margin-top:44px;padding-top:36px;border-top:1px solid var(--rule);">
+    <p style="font-family:var(--mono);font-size:8px;color:var(--orange);letter-spacing:0.18em;text-transform:uppercase;margin-bottom:18px;">Format landscape · 2025–2026</p>
+    <div class="g3">
+      <div class="reveal">
+        <div class="inline-num"><span class="count-target" data-target="46">0</span>%</div>
+        <div class="inline-lbl">audio-only listeners — the habitual, daily audience</div>
+        <div class="src">Acast Podcast Pulse 2025</div>
+      </div>
+      <div class="reveal reveal-delay-1">
+        <div class="inline-num"><span class="count-target" data-target="57">0</span>%</div>
+        <div class="inline-lbl">consume video podcasts monthly — growing faster than audio</div>
+        <div class="src">Acast Podcast Pulse 2025</div>
+      </div>
+      <div class="reveal reveal-delay-2">
+        <div class="inline-num">+39%</div>
+        <div class="inline-lbl">additional reach when video is added to an audio-only strategy</div>
+        <div class="src">Acast Podcast Pulse 2025</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orule"></div>
+
+<!-- DISPATCH 02: ATTENTION & TRUST -->
+<section class="s-dark">
+  <div class="chapter">
+    <span class="ch-num">Dispatch 02</span>
+    <div class="ch-rule-dk"></div>
+    <span class="ch-title ch-title-dk">Attention &amp; trust</span>
+  </div>
+  <div class="g2" style="margin-bottom:52px;">
+    <div class="reveal">
+      <div class="byline byline-dk">Reuters Advertising · EMEA Intelligence</div>
+      <h2 class="hed-xl">The medium<br>no one skips.</h2>
+      <p class="lede lede-dk">Podcasts are <strong>sought, not served.</strong> Every press of play is deliberate. That intentionality transforms the relationship between listener and the ads inside it. The brain works harder to construct audio narrative — and when it works harder, it retains more.</p>
+      <p class="lede lede-dk">For B2B advertisers, this is decisive. These are <strong>business decision-makers consuming content in active, focused states</strong> — not passive scroll. Their attention is present. Their trust is earnable.</p>
+    </div>
+    <div class="reveal reveal-delay-1">
+      <div style="margin-bottom:28px;">
+        <div class="stat-xl">2×</div>
+        <div class="stat-label">more attention generated by podcast ads vs. TV, social and digital video formats</div>
+        <div class="src src-dk" style="margin-top:8px;"><a href="https://www.dentsu.com/us/en/media-and-investors/dentsu-partners-with-six-top-audio-destinations" target="_blank" style="color:rgba(255,255,255,0.2);text-decoration:none;">dentsu / Lumen Research · Attention Economy Podcast Study · August 2023 ↗</a></div>
+      </div>
+      <div style="margin-bottom:28px;">
+        <div class="stat-lg">14.2<sup style="font-size:0.38em;vertical-align:super;">s</sup></div>
+        <div class="stat-label">average attention time for host-read ads — beating a 30-second TV spot. The longest attention of any format tested.</div>
+        <div class="src src-dk" style="margin-top:8px;"><a href="https://lumen-research.com/blog/lumen-audio-attention-economy/" target="_blank" style="color:rgba(255,255,255,0.2);text-decoration:none;">Lumen Research · dentsu Audio Attention Economy · 2023 ↗</a></div>
+      </div>
+      <div>
+        <div class="stat-lg"><span class="count-target" data-target="70">0</span><sup>%</sup></div>
+        <div class="stat-label">of audio podcast consumers are focused when listening — highest of any media type</div>
+        <div class="src src-dk" style="margin-top:8px;">Acast Podcast Pulse 2025 · n=2,600</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Animated bars -->
+  <div class="reveal" style="margin-bottom:48px;">
+    <p style="font-family:var(--mono);font-size:8px;color:rgba(255,255,255,0.28);letter-spacing:0.18em;text-transform:uppercase;margin-bottom:18px;">% focused when consuming · global consumers</p>
+    <div class="bar-row" data-width="70">
+      <span class="bar-lbl hi">Audio pod</span>
+      <div class="bar-track"><div class="bar-fill hi"></div></div>
+      <span class="bar-val hi">70%</span>
+    </div>
+    <div class="bar-row" data-width="67">
+      <span class="bar-lbl hi">Video pod</span>
+      <div class="bar-track"><div class="bar-fill hi"></div></div>
+      <span class="bar-val hi">67%</span>
+    </div>
+    <div class="bar-row" data-width="66">
+      <span class="bar-lbl">Cable TV</span>
+      <div class="bar-track"><div class="bar-fill"></div></div>
+      <span class="bar-val">66%</span>
+    </div>
+    <div class="bar-row" data-width="64">
+      <span class="bar-lbl">Instagram</span>
+      <div class="bar-track"><div class="bar-fill"></div></div>
+      <span class="bar-val">64%</span>
+    </div>
+    <div class="bar-row" data-width="64">
+      <span class="bar-lbl">YouTube</span>
+      <div class="bar-track"><div class="bar-fill"></div></div>
+      <span class="bar-val">64%</span>
+    </div>
+    <div class="bar-row" data-width="60">
+      <span class="bar-lbl">Radio</span>
+      <div class="bar-track"><div class="bar-fill"></div></div>
+      <span class="bar-val">60%</span>
+    </div>
+    <div class="src src-dk">Acast Podcast Pulse 2025 · Global Consumer Study · n=2,600</div>
+  </div>
+
+  <!-- Nielsen 1300 studies -->
+  <div style="padding-top:36px;border-top:1px solid var(--rule-dk);margin-bottom:48px;" class="reveal">
+    <p style="font-family:var(--mono);font-size:8px;color:var(--orange);letter-spacing:0.18em;text-transform:uppercase;margin-bottom:20px;">Nielsen · 1,300+ podcast brand lift studies · consistent outcomes</p>
+    <div class="g3">
+      <div>
+        <div class="inline-num" style="color:white;">+11<span style="font-size:0.55em;color:var(--orange);"> pts</span></div>
+        <div class="inline-lbl" style="color:rgba(255,255,255,0.38);">brand awareness lift — consistent across all categories and formats</div>
+      </div>
+      <div>
+        <div class="inline-num" style="color:white;">+7<span style="font-size:0.55em;color:var(--orange);"> pts</span></div>
+        <div class="inline-lbl" style="color:rgba(255,255,255,0.38);">purchase intent lift — above any other emerging media channel</div>
+      </div>
+      <div>
+        <div class="inline-num" style="color:white;">+6<span style="font-size:0.55em;color:var(--orange);"> pts</span></div>
+        <div class="inline-lbl" style="color:rgba(255,255,255,0.38);">brand recommendation lift — listeners become advocates</div>
+      </div>
+    </div>
+    <div class="src src-dk" style="margin-top:14px;"><a href="https://www.westwoodone.com/blog/2024/05/06/want-to-build-a-brand-audio-is-at-the-ready-what-1300-nielsen-podcast-brand-lift-studies-reveal-about-audios-ability-to-create-future-demand/" target="_blank" style="color:rgba(255,255,255,0.2);text-decoration:none;">Nielsen Podcast Brand Impact Norms Database · 1,300+ studies via Westwood One · 2024 ↗</a></div>
+  </div>
+
+  <!-- Trust data -->
+  <div style="padding-top:36px;border-top:1px solid var(--rule-dk);">
+    <p style="font-family:var(--mono);font-size:8px;color:var(--orange);letter-spacing:0.18em;text-transform:uppercase;margin-bottom:22px;">Trust differential</p>
+    <div class="g3">
+      <div class="reveal">
+        <div class="stat-lg"><span class="count-target" data-target="33">0</span><sup>%</sup></div>
+        <div class="stat-label">trust podcasters for product recommendations — equal to journalists, ahead of YouTubers, influencers and celebrities</div>
+        <div class="src src-dk">Acast Podcast Pulse 2025</div>
+      </div>
+      <div class="reveal reveal-delay-1">
+        <div class="stat-lg"><span class="count-target" data-target="84">0</span><sup>%</sup></div>
+        <div class="stat-label">of weekly listeners say a podcaster changed their mind about something they once believed</div>
+        <div class="src src-dk">Acast Podcast Pulse 2025</div>
+      </div>
+      <div class="reveal reveal-delay-2">
+        <div class="callout callout-dk">
+          <p>Podcasters rank <strong>#1 across all creator platforms</strong> for trustworthiness, honest opinions, and sustained attention — simultaneously, across all three criteria that matter most to audiences.</p>
+        </div>
+        <div class="src src-dk" style="margin-top:10px;">Acast Podcast Pulse 2025 · 11 platforms compared</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Academic backing -->
+  <div style="padding-top:36px;border-top:1px solid var(--rule-dk);margin-top:48px;" class="reveal">
+    <p style="font-family:var(--mono);font-size:8px;color:var(--orange);letter-spacing:0.18em;text-transform:uppercase;margin-bottom:16px;">Academic validation · peer-reviewed research</p>
+    <div class="callout callout-dk">
+      <p>Experimental research (N=330) confirms that <strong>parasocial relationships with podcast hosts positively influence brand attitudes and purchase behaviours.</strong> Listeners who feel a genuine connection to a host lower their critical guard toward ads — meaning host-read endorsements land as trusted personal recommendations, not interruptions. This effect is unique to podcasting and cannot be replicated through display or social placements.</p>
+    </div>
+    <div class="src src-dk" style="margin-top:10px;"><a href="https://www.tandfonline.com/doi/full/10.1080/13527266.2022.2054017" target="_blank" style="color:rgba(255,255,255,0.2);text-decoration:none;">Brinson &amp; Lemon · Journal of Marketing Communications · Taylor &amp; Francis · Vol. 29, 2023 ↗</a></div>
+  </div>
+</section>
+
+<div class="orule"></div>
+
+<!-- DISPATCH 03: COMMERCIAL PROOF -->
+<section class="s-paper">
+  <div class="chapter">
+    <span class="ch-num">Dispatch 03</span>
+    <div class="ch-rule"></div>
+    <span class="ch-title">Commercial proof</span>
+  </div>
+  <div class="byline">Reuters Advertising · EMEA Intelligence</div>
+  <h2 class="hed-lg reveal">Ads that are <em>heard, remembered, and acted on.</em></h2>
+  <p class="lede reveal" style="max-width:660px;margin-bottom:38px;">The combination of low ad saturation, high trust and active attention creates an environment where brand messages land with unusual force — and survive the ad break. For B2B campaigns where multiple exposures are expensive, this efficiency is critical.</p>
+
+  <div class="g3" style="margin-bottom:44px;">
+    <div class="reveal">
+      <div class="inline-num"><span class="count-target" data-target="60">0</span>%</div>
+      <div class="inline-lbl">of audio podcast listeners actively consume ads — highest of any media type measured</div>
+      <div class="src">Acast Podcast Pulse 2025</div>
+    </div>
+    <div class="reveal reveal-delay-1">
+      <div class="inline-num"><span class="count-target" data-target="44">0</span>%</div>
+      <div class="inline-lbl">say podcast ads are more memorable than other formats. Net memorability: +29 points.</div>
+      <div class="src">Acast Podcast Pulse 2025 · daily listeners</div>
+    </div>
+    <div class="reveal reveal-delay-2">
+      <div class="inline-num"><span class="count-target" data-target="67">0</span>%</div>
+      <div class="inline-lbl">of global listeners made a direct purchase from a podcaster's recommendation</div>
+      <div class="src">Acast Podcast Pulse 2025 · global</div>
+    </div>
+  </div>
+
+  <div class="g2" style="padding-top:36px;border-top:1px solid var(--rule);">
+    <div class="reveal">
+      <p style="font-family:var(--mono);font-size:8px;color:var(--orange);letter-spacing:0.18em;text-transform:uppercase;margin-bottom:16px;">Ad perception vs. other channels</p>
+      <div class="perc-row">
+        <div class="perc-head"><span class="perc-name">More memorable</span><span class="perc-val">44% vs 15%</span></div>
+        <div class="perc-track"><div class="perc-fill" data-width="74"></div></div>
+      </div>
+      <div class="perc-row">
+        <div class="perc-head"><span class="perc-name">More authentic</span><span class="perc-val">45% vs 16%</span></div>
+        <div class="perc-track"><div class="perc-fill" data-width="74"></div></div>
+      </div>
+      <div class="perc-row">
+        <div class="perc-head"><span class="perc-name">More relevant</span><span class="perc-val">43% vs 18%</span></div>
+        <div class="perc-track"><div class="perc-fill" data-width="70"></div></div>
+      </div>
+      <div class="src" style="margin-top:12px;">Acast Podcast Pulse 2025 · daily listeners n=779</div>
+
+      <!-- Nielsen brand awareness lift -->
+      <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--rule);">
+        <p style="font-family:var(--mono);font-size:8px;color:var(--orange);letter-spacing:0.18em;text-transform:uppercase;margin-bottom:12px;">Nielsen · brand awareness impact</p>
+        <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:6px;">
+          <div class="inline-num">+13</div>
+          <div style="font-family:var(--bask);font-style:italic;font-size:12px;color:var(--muted);line-height:1.45;">percentage points brand awareness lift from a single podcast campaign</div>
+        </div>
+        <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:8px;">
+          <div class="inline-num">71%</div>
+          <div style="font-family:var(--bask);font-style:italic;font-size:12px;color:var(--muted);line-height:1.45;">aided recall rate for podcast ads — vs. 50% for those not exposed</div>
+        </div>
+        <div class="src"><a href="https://www.nielsen.com/insights/2023/in-emerging-media-brand-recall-is-the-biggest-driver-of-lift/" target="_blank" style="color:rgba(0,0,0,0.26);text-decoration:none;">Nielsen · 2023 Brand Lift Report: Building Brands with Emerging Media · 1,000+ US campaigns ↗</a></div>
+      </div>
+    </div>
+    <div class="reveal reveal-delay-1">
+      <div class="callout" style="margin-bottom:20px;">
+        <p>On brand safety: only <strong>6% of consumers</strong> say podcast content offends or aggravates them — versus 25% for Facebook, 19% YouTube. <strong>Lowest-risk ad environment in digital media.</strong></p>
+      </div>
+      <div class="src" style="margin-bottom:18px;">Acast Podcast Pulse 2025 · n=2,580</div>
+      <div class="highlight-band" style="margin-bottom:20px;">
+        <p>Podcast listeners need <strong>fewer than 2 ad exposures</strong> to seriously consider a brand — versus 5+ on YouTube, Facebook and Instagram. Every impression works harder.</p>
+      </div>
+      <!-- Academic backing -->
+      <div class="callout">
+        <p>Peer-reviewed research confirms the mechanism: <strong>parasocial relationships with hosts reduce listeners' critical evaluation of promotional messages</strong> — indirectly increasing their intent to seek more information about advertised brands. Host-read ads are not perceived as advertising. They are perceived as advice.</p>
+      </div>
+      <div class="src" style="margin-top:10px;"><a href="https://www.emerald.com/insight/content/doi/10.1108/JCM-01-2023-5819/full/html" target="_blank" style="color:rgba(0,0,0,0.26);text-decoration:none;">Journal of Consumer Marketing · Emerald Publishing · 2023 ↗</a></div>
+    </div>
+  </div>
+</section>
+
+<div class="orule"></div>
+
+<!-- DISPATCH 04: UK PICTURE -->
+<section class="s-dark">
+  <div class="chapter">
+    <span class="ch-num">Dispatch 04</span>
+    <div class="ch-rule-dk"></div>
+    <span class="ch-title ch-title-dk">The UK opportunity</span>
+  </div>
+  <div class="g2" style="margin-bottom:52px;">
+    <div class="reveal">
+      <div class="byline byline-dk">Reuters Advertising · EMEA Intelligence</div>
+      <h2 class="hed-xl">The UK audience<br>already decided.<br><em>The spend hasn't.</em></h2>
+      <p class="lede lede-dk">43% monthly reach. 79% past-week ad recall. Yet podcasts attract <strong>less than 5% of all UK audio advertising spend.</strong> This is not a demand problem — it is a buyer awareness problem. The infrastructure exists. The audience is habitual.</p>
+      <p class="lede lede-dk">Adjusted for audience size, the UK spends one-fifth of what the US does per listener-hour. <strong>That is 5.2× headroom</strong> against a market that took eight years to grow 7×.</p>
+      <div class="callout callout-dk" style="margin-top:16px;margin-bottom:12px;">
+        <p>For context: Nielsen's global benchmark for podcast aided recall sits at <strong>71%</strong> — already the highest of any emerging media channel. The UK's 79% surpasses even that. This audience is not just present. <strong>It is paying attention.</strong></p>
+      </div>
+      <div class="src src-dk"><a href="https://www.nielsen.com/insights/2023/in-emerging-media-brand-recall-is-the-biggest-driver-of-lift/" target="_blank" style="color:rgba(255,255,255,0.2);text-decoration:none;">Nielsen · 2023 Brand Lift Report ↗</a> &nbsp;·&nbsp; Sounds Profitable · Advertising Landscape UK · February 2026 · n=5,033</div>
+    </div>
+    <div class="reveal reveal-delay-1">
+      <div class="aud-grid">
+        <div class="aud-cell">
+          <div class="aud-lbl">Monthly reach</div>
+          <div class="aud-val"><span class="count-target" data-target="43">0</span>%</div>
+          <div class="aud-note">UK adults. US: 31%</div>
+        </div>
+        <div class="aud-cell">
+          <div class="aud-lbl">Daily listening</div>
+          <div class="aud-val"><span class="count-target" data-target="56">0</span>%</div>
+          <div class="aud-note">tune in daily or near-daily</div>
+        </div>
+        <div class="aud-cell">
+          <div class="aud-lbl">Past-week recall</div>
+          <div class="aud-val"><span class="count-target" data-target="79">0</span>%</div>
+          <div class="aud-note">10th of 21 media measured</div>
+        </div>
+        <div class="aud-cell">
+          <div class="aud-lbl">Gender parity</div>
+          <div class="aud-val">79/80</div>
+          <div class="aud-note">male / female recall</div>
+        </div>
+        <div class="aud-cell">
+          <div class="aud-lbl">Audio ad spend</div>
+          <div class="aud-val">&lt;5%</div>
+          <div class="aud-note">of UK audio allocated to podcasts</div>
+        </div>
+        <div class="aud-cell">
+          <div class="aud-lbl">Headroom vs US</div>
+          <div class="aud-val">5.2×</div>
+          <div class="aud-note">£0.18 vs £0.94 per listener-hour</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Three under-supplied genres -->
+  <div style="padding-top:36px;border-top:1px solid var(--rule-dk);" class="reveal">
+    <p style="font-family:var(--mono);font-size:8px;color:var(--orange);letter-spacing:0.18em;text-transform:uppercase;margin-bottom:4px;">Three under-supplied genres for the 35–54 decision-maker audience</p>
+    <p style="font-family:var(--bask);font-style:italic;font-size:11px;color:rgba(255,255,255,0.28);margin-bottom:24px;">Index = % 35–54 listeners minus % all adults. Positive = over-represented. Under-supplied = few competing brands.</p>
+    <div class="g3">
+      <div class="genre-card reveal">
+        <div style="font-family:var(--mono);font-size:8.5px;color:var(--orange);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:7px;">Genre 01</div>
+        <div style="font-family:var(--bask);font-weight:700;font-size:18px;color:white;margin-bottom:8px;">Politics &amp; Current Affairs</div>
+        <div class="genre-idx">+38</div>
+        <p class="lede lede-dk" style="font-size:11px;margin-top:8px;">Highest over-index in the study. Quiet, advertiser-safe — and largely underbought.</p>
+      </div>
+      <div class="genre-card reveal reveal-delay-1">
+        <div style="font-family:var(--mono);font-size:8.5px;color:var(--orange);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:7px;">Genre 02</div>
+        <div style="font-family:var(--bask);font-weight:700;font-size:18px;color:white;margin-bottom:8px;">Business &amp; Money</div>
+        <div class="genre-idx">+29</div>
+        <p class="lede lede-dk" style="font-size:11px;margin-top:8px;">High-income, decision-maker dense, commute fuel. Few competing brands — white space available.</p>
+      </div>
+      <div class="genre-card reveal reveal-delay-2">
+        <div style="font-family:var(--mono);font-size:8.5px;color:var(--orange);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:7px;">Genre 03</div>
+        <div style="font-family:var(--bask);font-weight:700;font-size:18px;color:white;margin-bottom:8px;">News &amp; Daily Briefings</div>
+        <div class="genre-idx">+24</div>
+        <p class="lede lede-dk" style="font-size:11px;margin-top:8px;">Habitual. Replaces morning radio. Only 4 brands dominate — room for many more.</p>
+      </div>
+    </div>
+    <div class="src src-dk" style="margin-top:14px;">Sounds Profitable · Advertising Landscape UK · 2026</div>
+  </div>
+</section>
+
+<div class="orule"></div>
+
+<!-- DISPATCH 05: RECOMMENDATIONS -->
+<section class="s-dark" style="padding-bottom:60px;">
+  <div class="chapter">
+    <span class="ch-num">Dispatch 05</span>
+    <div class="ch-rule-dk"></div>
+    <span class="ch-title ch-title-dk">Recommendations</span>
+  </div>
+  <div style="height:3px;background:rgba(255,255,255,0.12);margin-bottom:28px;"></div>
+  <div class="byline byline-dk">Reuters Advertising · EMEA Intelligence</div>
+  <h2 class="hed-xl reveal" style="margin-bottom:32px;">What this means<br><em>for your clients.</em></h2>
+  <div class="dispatch-grid reveal">
+    <div class="dispatch-card">
+      <div class="d-num">01</div>
+      <p>Present podcast and vodcast as a <strong>primary channel recommendation</strong> for B2B clients targeting decision-makers — not an add-on or experiment.</p>
+    </div>
+    <div class="dispatch-card">
+      <div class="d-num">02</div>
+      <p>Lead with <strong>2× TV attention and #1 trust</strong> across all legacy media. These numbers reframe the conversation from niche to necessity.</p>
+    </div>
+    <div class="dispatch-card">
+      <div class="d-num">03</div>
+      <p>For finance and professional services clients, flag <strong>Business &amp; Money (+29) and News (+24)</strong> as under-supplied at the 35–54 index. First movers build positions competitors can't buy back.</p>
+    </div>
+    <div class="dispatch-card">
+      <div class="d-num">04</div>
+      <p>The <strong>video extension argument is now data-backed.</strong> Adding vodcast to audio increases reach by 39%. Clients who resist audio may still commit to video-first.</p>
+    </div>
+    <div class="dispatch-card">
+      <div class="d-num">05</div>
+      <p>Use the UK spend paradox as urgency: <strong>43% reach, 79% recall, under 5% of audio spend.</strong> This market compresses quickly — early movers lock in share of voice.</p>
+    </div>
+    <div class="dispatch-card">
+      <div class="d-num">06</div>
+      <p>Reuters' B2B decision-maker audience <strong>maps directly onto the three over-indexed UK genres.</strong> The Reuters context adds a trust halo no algorithmic placement can replicate.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-meta">
+    Thomson Reuters™ Advertising · Bibliothèque Wire Service System · Dispatch 002 · June 2026 · Internal use only<br>
+    Sources: Forrester Research (Dec 2025) · Acast Podcast Pulse (2025) · Sounds Profitable / Advertising Landscape UK (Feb 2026) · dentsu / Lumen Research Attention Economy (Aug 2023) · Nielsen Brand Lift Report (2023) · Nielsen Podcast Brand Impact Norms Database (2024) · Journal of Marketing Communications, Taylor &amp; Francis (2023) · Journal of Consumer Marketing, Emerald Publishing (2023)<br>
+    © 2026 Thomson Reuters. All rights reserved. Not for distribution.
+  </div>
+  <span class="footer-brand">REUTERS</span>
+</footer>
+
+<script>
+// DATELINE: auto timezone
+(function(){
+  function pad(n){return n<10?'0'+n:n;}
+  function updateTime(){
+    var now=new Date();
+    var day=now.getDate();
+    var months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var mo=months[now.getMonth()];
+    var yr=now.getFullYear();
+    var h=pad(now.getHours());
+    var m=pad(now.getMinutes());
+    var tz='';
+    try{
+      tz=new Intl.DateTimeFormat('en',{timeZoneName:'short'}).formatToParts(now).find(function(p){return p.type==='timeZoneName';}).value;
+    }catch(e){}
+    document.getElementById('dl-time').textContent=day+' '+mo+' '+yr+' · '+h+':'+m+(tz?' '+tz:'');
+  }
+  updateTime();
+  setInterval(updateTime,30000);
+})();
+
+// READING PROGRESS BAR
+window.addEventListener('scroll',function(){
+  var h=document.documentElement.scrollHeight-window.innerHeight;
+  var pct=h>0?(window.scrollY/h*100):0;
+  document.getElementById('prog').style.width=pct+'%';
+});
+
+// INTERSECTION OBSERVER for reveals + counters + bars
+var counted=new Set();
+var barsAnimated=new Set();
+
+var io=new IntersectionObserver(function(entries){
+  entries.forEach(function(entry){
+    if(!entry.isIntersecting) return;
+    var el=entry.target;
+
+    // reveal
+    if(el.classList.contains('reveal')){
+      el.classList.add('visible');
+    }
+
+    // counters
+    var counters=el.querySelectorAll('.count-target');
+    counters.forEach(function(c){
+      if(counted.has(c)) return;
+      counted.add(c);
+      var target=parseInt(c.getAttribute('data-target'),10);
+      var start=0;
+      var duration=1400;
+      var startTime=null;
+      function step(ts){
+        if(!startTime) startTime=ts;
+        var prog=Math.min((ts-startTime)/duration,1);
+        var ease=1-Math.pow(1-prog,3);
+        c.textContent=Math.round(start+(target-start)*ease);
+        if(prog<1) requestAnimationFrame(step);
+        else c.textContent=target;
+      }
+      requestAnimationFrame(step);
+    });
+
+    // animated bars (attention bars)
+    var barRows=el.querySelectorAll('.bar-row');
+    barRows.forEach(function(row){
+      if(barsAnimated.has(row)) return;
+      barsAnimated.add(row);
+      var w=parseInt(row.getAttribute('data-width'),10);
+      var fill=row.querySelector('.bar-fill');
+      if(fill) setTimeout(function(){fill.style.width=w+'%';},80);
+    });
+
+    // perception fills
+    var percFills=el.querySelectorAll('.perc-fill[data-width]');
+    percFills.forEach(function(pf){
+      if(barsAnimated.has(pf)) return;
+      barsAnimated.add(pf);
+      var w=parseInt(pf.getAttribute('data-width'),10);
+      setTimeout(function(){pf.style.width=w+'%';},120);
+    });
+  });
+},{threshold:0.15});
+
+// Observe all reveal elements + their parents for counter/bar triggers
+document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+document.querySelectorAll('.s-dark,.s-parch,.s-paper,.s-cream,.hero').forEach(function(el){io.observe(el);});
+</script>
+</body>
+</html>
