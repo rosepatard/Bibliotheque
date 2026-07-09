@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bibliothèque — Wire Service Design System</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Sans+Condensed:wght@300;400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+
+/* ═══════════════════════════════════════════════════
+   BIBLIOTHÈQUE — WIRE SERVICE DESIGN SYSTEM
+   Thomson Reuters™ Advertising · EMEA
+   Version 1.1 · June 2026 · TR Brand Compliant
+   ═══════════════════════════════════════════════════ */
+
+:root {
+  /* ── TR BRAND PALETTE ── */
+  --wire-orange:    #D64000;   /* TR Orange — primary */
+  --wire-orange-lt: #F2C4AA;
+  --wire-green:     #123015;   /* TR Racing Green — Foundational */
+  --wire-ink:       #123015;   /* body text on light = Racing Green */
+  --wire-dark:      #123015;   /* dark sections = Racing Green */
+  --wire-mid:       #1E4020;   /* mid-tone green */
+  --wire-parchment: #F5F0E4;
+  --wire-paper:     #FAF7F0;
+  --wire-cream:     #FDFBF6;
+  --wire-muted:     #5A7A5C;   /* muted green-grey */
+  --wire-rule:      rgba(18,48,21,0.12);
+  --wire-rule-lt:   rgba(18,48,21,0.07);
+  --wire-rule-dk:   rgba(255,255,255,0.08);
+
+  /* ── TYPOGRAPHY ── */
+  /* Clario = TR corporate font; Arial fallback for non-TR environments.  */
+  /* Libre Baskerville retained as Wire editorial serif (brand override §8) */
+  --clario: 'Clario', Arial, sans-serif;
+  --bask:   'Libre Baskerville', Georgia, serif;
+  --cond:   'IBM Plex Sans Condensed', Arial Narrow, sans-serif;
+  --mono:   'IBM Plex Mono', 'Courier New', monospace;
+
+  /* ── SPACING ── */
+  --gutter: 8vw;
+  --section-v: 100px;
+}
+
+/* ── RESET ── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body { font-family: var(--clario); background: var(--wire-parchment); color: var(--wire-ink); overflow-x: hidden; font-size: 16px; }
+
+/* ════════════════════════════════════════
+   WIRE CHROME — the persistent system DNA
+   ════════════════════════════════════════ */
+
+/* Dateline bar — appears at top of every section */
+.w-dateline {
+  background: var(--wire-orange);
+  padding: 6px var(--gutter);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.w-dateline-city {
+  font-family: var(--cond);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: white;
+  text-transform: uppercase;
+}
+.w-dateline-sep { width: 1px; height: 14px; background: rgba(255,255,255,0.3); flex-shrink: 0; }
+.w-dateline-time {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: rgba(255,255,255,0.75);
+  letter-spacing: 0.1em;
+}
+.w-dateline-ref {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: rgba(255,255,255,0.45);
+  letter-spacing: 0.12em;
+  margin-left: auto;
+  text-transform: uppercase;
+}
+
+/* Ticker bar — sticky */
+.w-ticker {
+  background: var(--wire-dark);
+  padding: 5px 0;
+  overflow: hidden;
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 1px 0 rgba(214,64,0,0.3);
+}
+.w-ticker-track {
+  display: inline-block;
+  animation: wire-scroll 28s linear infinite;
+}
+.w-tick {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: rgba(255,255,255,0.38);
+  letter-spacing: 0.09em;
+  margin-right: 48px;
+  display: inline;
+}
+.w-tick::before { content: '▸  '; color: var(--wire-orange); }
+@keyframes wire-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* Column rules */
+.w-rule { height: 1px; background: var(--wire-rule); }
+.w-rule-orange { height: 2px; background: var(--wire-orange); }
+.w-rule-heavy { height: 3px; background: var(--wire-ink); }
+
+/* Dispatch number / folio tag */
+.w-folio {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--wire-muted);
+}
+.w-folio-orange { color: var(--wire-orange); }
+
+/* Byline */
+.w-byline {
+  font-family: var(--cond);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--wire-muted);
+  border-bottom: 1px solid var(--wire-rule);
+  padding-bottom: 8px;
+  margin-bottom: 16px;
+}
+
+/* Headline — Baskerville, print-weight */
+.w-hed {
+  font-family: var(--bask);
+  font-weight: 700;
+  line-height: 1.12;
+  color: var(--wire-ink);
+}
+.w-hed em { font-style: italic; font-weight: 400; color: var(--wire-orange); }
+.w-hed-xl  { font-size: clamp(44px, 6.5vw, 88px); }
+.w-hed-lg  { font-size: clamp(32px, 4vw, 56px); }
+.w-hed-md  { font-size: clamp(22px, 2.8vw, 36px); }
+.w-hed-sm  { font-size: clamp(18px, 2vw, 26px); }
+
+/* Lede / body copy */
+.w-lede {
+  font-family: var(--bask);
+  font-style: italic;
+  font-size: 16px;
+  line-height: 1.75;
+  color: #3A3020;
+}
+.w-lede strong { font-style: normal; font-weight: 700; color: var(--wire-ink); }
+.w-body {
+  font-family: var(--bask);
+  font-size: 14px;
+  line-height: 1.75;
+  color: #3A3020;
+}
+.w-body em { color: var(--wire-orange); font-style: italic; }
+
+/* Deck (subhead between hed and lede) */
+.w-deck {
+  font-family: var(--cond);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.45;
+  color: var(--wire-muted);
+  border-left: 3px solid var(--wire-orange);
+  padding-left: 14px;
+}
+
+/* Source / caption */
+.w-source {
+  font-family: var(--clario);
+  font-size: 10px;
+  color: rgba(18,48,21,0.32);
+  letter-spacing: 0.06em;
+  line-height: 1.6;
+  text-transform: uppercase;
+}
+.w-source-dk { color: rgba(255,255,255,0.22); }
+
+/* ════════════════════════════════════════
+   STAT COMPONENTS
+   ════════════════════════════════════════ */
+
+/* Big dispatch number */
+.w-stat-hero {
+  font-family: var(--bask);
+  font-weight: 700;
+  color: var(--wire-orange);
+  line-height: 0.88;
+  letter-spacing: -0.03em;
+}
+.w-stat-hero-xl { font-size: clamp(100px, 15vw, 180px); }
+.w-stat-hero-lg { font-size: clamp(64px, 9vw, 110px); }
+.w-stat-hero-md { font-size: clamp(44px, 6vw, 72px); }
+
+/* Inline stat — number + label in one unit */
+.w-inline-stat { display: flex; flex-direction: column; gap: 4px; }
+.w-inline-stat .n {
+  font-family: var(--cond);
+  font-size: 42px;
+  font-weight: 700;
+  color: var(--wire-orange);
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+.w-inline-stat .l {
+  font-family: var(--bask);
+  font-style: italic;
+  font-size: 13px;
+  color: var(--wire-muted);
+  line-height: 1.4;
+  max-width: 180px;
+}
+
+/* Callout box */
+.w-callout {
+  border-left: 3px solid var(--wire-orange);
+  padding: 16px 20px;
+  background: rgba(214,64,0,0.04);
+}
+.w-callout p {
+  font-family: var(--bask);
+  font-style: italic;
+  font-size: 14px;
+  line-height: 1.65;
+  color: #3A3020;
+}
+.w-callout strong { font-style: normal; font-weight: 700; color: var(--wire-ink); }
+
+/* ════════════════════════════════════════
+   LAYOUT PRIMITIVES
+   ════════════════════════════════════════ */
+
+.w-section { padding: var(--section-v) var(--gutter); position: relative; }
+/* When a dateline opens a section, it should sit close to whatever precedes it (chapter marker or prior section) rather than floating in the section's full top padding */
+.w-section > .w-dateline:first-child { margin-top: calc(-1 * var(--section-v) + 28px); }
+.w-section-dark { background: var(--wire-dark); color: white; }
+.w-section-ink  { background: var(--wire-ink);  color: white; }
+.w-section-paper { background: var(--wire-paper); }
+.w-section-cream { background: var(--wire-cream); }
+
+.w-cols-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; }
+.w-cols-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 40px; }
+.w-cols-2-3 { display: grid; grid-template-columns: 2fr 3fr; gap: 60px; }
+.w-cols-3-2 { display: grid; grid-template-columns: 3fr 2fr; gap: 60px; }
+
+.w-vline { width: 1px; background: var(--wire-rule); align-self: stretch; }
+.w-vline-orange { background: var(--wire-orange); }
+
+/* ════════════════════════════════════════
+   CHAPTER MARKER
+   ════════════════════════════════════════ */
+.w-chapter {
+  padding: 80px var(--gutter) 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.w-chapter-num {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--wire-orange);
+  letter-spacing: 0.2em;
+  flex-shrink: 0;
+}
+.w-chapter-rule { flex: 1; height: 1px; background: var(--wire-rule); }
+.w-chapter-title {
+  font-family: var(--cond);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--wire-muted);
+  flex-shrink: 0;
+}
+
+/* ════════════════════════════════════════
+   DATA COMPONENTS
+   ════════════════════════════════════════ */
+
+/* Bar chart */
+.w-bar-group { margin-bottom: 18px; }
+.w-bar-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 5px;
+}
+.w-bar-label .name {
+  font-family: var(--cond);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--wire-muted);
+}
+.w-bar-label .val {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--wire-ink);
+}
+.w-bar-label .val.hi { color: var(--wire-orange); font-weight: 500; }
+.w-bar-track {
+  height: 10px;
+  background: rgba(0,0,0,0.06);
+  position: relative;
+  overflow: hidden;
+}
+.w-bar-fill { height: 100%; transition: width 1.2s cubic-bezier(0.25,0.46,0.45,0.94); }
+.w-bar-fill.primary { background: var(--wire-orange); }
+.w-bar-fill.secondary { background: rgba(0,0,0,0.18); }
+.w-bar-fill.ghost { background: rgba(214,64,0,0.25); }
+
+/* Section comparison bars (dual) */
+.w-dual-row {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 16px;
+  margin-bottom: 12px;
+  align-items: center;
+}
+.w-dual-label { font-family: var(--mono); font-size: 9px; color: var(--wire-muted); letter-spacing: 0.06em; }
+.w-dual-bars { display: flex; flex-direction: column; gap: 3px; }
+.w-mini-wrap { display: flex; align-items: center; gap: 8px; height: 12px; }
+.w-mini-bar { height: 100%; min-width: 2px; }
+.w-mini-bar.en { background: var(--wire-ink); }
+.w-mini-bar.ar { background: var(--wire-orange); opacity: 0.65; }
+.w-mini-val { font-family: var(--mono); font-size: 9px; color: var(--wire-muted); white-space: nowrap; }
+
+/* People/unit grid */
+.w-unit-grid { display: flex; flex-wrap: wrap; gap: 5px; max-width: 680px; }
+.w-unit {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: rgba(0,0,0,0.07);
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+.w-unit.on { background: var(--wire-orange); }
+
+/* ════════════════════════════════════════
+   WORD CLOUD
+   ════════════════════════════════════════ */
+.w-words { display: flex; flex-wrap: wrap; gap: 8px; }
+.w-word {
+  padding: 9px 16px;
+  font-family: var(--bask);
+  font-style: italic;
+  font-size: 14px;
+  transition: all 0.8s ease;
+  cursor: default;
+}
+.w-word.understood { background: var(--wire-ink); color: var(--wire-cream); }
+.w-word.missed {
+  background: rgba(214,64,0,0.08);
+  color: var(--wire-orange);
+  border: 1px solid rgba(214,64,0,0.2);
+}
+.w-word.missed.fade {
+  opacity: 0.35;
+  filter: blur(1.2px);
+  text-decoration: line-through;
+  text-decoration-color: var(--wire-orange);
+}
+
+/* ════════════════════════════════════════
+   SPLIT PANEL
+   ════════════════════════════════════════ */
+.w-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  overflow: hidden;
+  border: 1px solid var(--wire-rule);
+}
+.w-split-panel { padding: 40px 36px; position: relative; }
+.w-split-panel.light { background: var(--wire-cream); border-right: 1px solid var(--wire-rule); }
+.w-split-panel.dark  { background: var(--wire-dark); color: white; }
+.w-split-tag {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  display: block;
+}
+.w-split-panel.light .w-split-tag { color: var(--wire-muted); }
+.w-split-panel.dark  .w-split-tag { color: var(--wire-orange); }
+.w-split-arrow {
+  position: absolute; bottom: 18px; right: 20px;
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em;
+  color: var(--wire-orange); text-transform: uppercase;
+}
+
+/* ════════════════════════════════════════
+   DISPATCH CARD (closing actions)
+   ════════════════════════════════════════ */
+.w-dispatch-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: rgba(255,255,255,0.06); }
+.w-dispatch-card { background: var(--wire-dark); padding: 26px 22px; border-top: 2px solid rgba(255,255,255,0.05); transition: border-color 0.3s; }
+.w-dispatch-card:hover { border-top-color: var(--wire-orange); }
+.w-dispatch-num { font-family: var(--mono); font-size: 9px; color: var(--wire-orange); letter-spacing: 0.2em; margin-bottom: 10px; }
+.w-dispatch-card p { font-family: var(--bask); font-size: 13px; font-style: italic; line-height: 1.65; color: rgba(255,255,255,0.5); font-weight: 400; }
+.w-dispatch-card p strong { font-style: normal; font-weight: 700; color: white; }
+
+/* ════════════════════════════════════════
+   CASE CARD
+   ════════════════════════════════════════ */
+.w-case-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; background: var(--wire-rule); }
+.w-case-card { background: var(--wire-cream); padding: 34px; }
+.w-case-tag { font-family: var(--cond); font-size: 10px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--wire-orange); margin-bottom: 6px; }
+.w-case-card h3 { font-family: var(--bask); font-size: 18px; font-weight: 700; line-height: 1.25; margin-bottom: 22px; max-width: 300px; }
+
+/* AU score card */
+.w-au-card { padding: 14px; background: rgba(0,0,0,0.03); border-top: 2px solid rgba(0,0,0,0.08); }
+.w-au-card.hi { border-top-color: var(--wire-orange); }
+.w-au-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--wire-muted); margin-bottom: 4px; }
+.w-au-num { font-family: var(--cond); font-size: 36px; font-weight: 700; color: var(--wire-ink); line-height: 1; margin-bottom: 3px; }
+.w-au-sub { font-family: var(--bask); font-size: 10px; font-style: italic; color: var(--wire-muted); }
+
+/* ════════════════════════════════════════
+   LEGEND
+   ════════════════════════════════════════ */
+.w-legend { display: flex; gap: 28px; }
+.w-legend-item { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--wire-muted); }
+.w-legend-dot { width: 10px; height: 10px; flex-shrink: 0; }
+
+/* ════════════════════════════════════════
+   FOOTER
+   ════════════════════════════════════════ */
+.w-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding-top: 28px;
+  margin-top: 80px;
+}
+.w-footer-meta { font-family: var(--clario); font-size: 10.5px; letter-spacing: 0.04em; color: rgba(255,255,255,0.22); line-height: 1.9; max-width: 680px; }
+.w-footer-copyright { font-family: var(--clario); font-size: 10.5px; color: rgba(255,255,255,0.22); margin-top: 6px; }
+.w-footer-brand { font-family: var(--clario); font-size: 22px; font-weight: 700; color: var(--wire-orange); letter-spacing: 0.08em; text-transform: uppercase; flex-shrink: 0; }
+
+/* ════════════════════════════════════════
+   SCROLL REVEAL
+   ════════════════════════════════════════ */
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.75s ease, transform 0.75s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.d1 { transition-delay: 0.08s; }
+.d2 { transition-delay: 0.16s; }
+.d3 { transition-delay: 0.26s; }
+.d4 { transition-delay: 0.38s; }
+
+/* ════════════════════════════════════════
+   HERO
+   ════════════════════════════════════════ */
+.w-hero {
+  min-height: calc(100vh - 28px);
+  background: var(--wire-dark);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.w-hero-ghost {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--cond);
+  font-size: 30vw;
+  font-weight: 700;
+  color: rgba(255,255,255,0.018);
+  white-space: nowrap;
+  pointer-events: none;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.w-hero-body {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 60px var(--gutter);
+  align-items: end;
+  gap: 80px;
+}
+
+.w-hero-left { display: flex; flex-direction: column; justify-content: flex-end; }
+.w-hero-hed {
+  font-family: var(--bask);
+  font-size: clamp(52px, 7.5vw, 100px);
+  font-weight: 700;
+  color: white;
+  line-height: 1.0;
+  letter-spacing: -0.02em;
+  opacity: 0;
+  animation: fadeUp 0.9s 0.5s forwards;
+}
+.w-hero-hed em { font-style: italic; font-weight: 400; color: var(--wire-orange); }
+
+.w-hero-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 24px;
+  border-left: 1px solid rgba(255,255,255,0.08);
+  padding-left: 50px;
+  opacity: 0;
+  animation: fadeUp 0.9s 0.8s forwards;
+}
+.w-hero-deck { font-family: var(--bask); font-style: italic; font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.5); }
+.w-hero-deck strong { font-style: normal; color: rgba(255,255,255,0.8); }
+.w-hero-scroll {
+  display: flex; align-items: center; gap: 10px;
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase;
+  color: rgba(255,255,255,0.2);
+}
+.w-scroll-line { width: 36px; height: 1px; background: var(--wire-orange); position: relative; overflow: hidden; }
+.w-scroll-line::after {
+  content: ''; position: absolute; top: 0; left: -100%;
+  width: 100%; height: 100%; background: white;
+  animation: scanline 2s 2s infinite;
+}
+
+@keyframes scanline { to { left: 200%; } }
+@keyframes fadeUp { from { opacity:0; transform:translateY(22px); } to { opacity:1; transform:translateY(0); } }
+
+/* ════════════════════════════════════════
+   DARK SECTION OVERRIDES (TR Racing Green bg)
+   ════════════════════════════════════════ */
+.w-section-dark .w-hed { color: white; }
+.w-section-dark .w-lede { color: rgba(255,255,255,0.62); }
+.w-section-dark .w-byline { color: rgba(255,255,255,0.35); border-bottom-color: rgba(255,255,255,0.1); }
+.w-section-dark .w-rule { background: rgba(255,255,255,0.1); }
+.w-section-dark .w-bar-track { background: rgba(255,255,255,0.08); }
+.w-section-dark .w-bar-fill.secondary { background: rgba(255,255,255,0.18); }
+.w-section-dark .w-inline-stat .l { color: rgba(255,255,255,0.5); }
+.w-section-dark .w-callout { background: rgba(214,64,0,0.15); border-left-color: var(--wire-orange); }
+.w-section-dark .w-callout p { color: rgba(255,255,255,0.65); }
+.w-section-dark .w-callout strong { color: white; }
+
+/* ════════════════════════════════════════
+   SEESAW
+   ════════════════════════════════════════ */
+.w-seesaw { display: grid; grid-template-columns: 1fr 52px 1fr; align-items: center; max-width: 680px; }
+.w-seesaw-panel { padding: 28px 24px; }
+.w-seesaw-panel.active { background: var(--wire-orange); }
+.w-seesaw-panel.passive { border: 1px solid rgba(255,255,255,0.08); }
+.w-seesaw-pct {
+  font-family: var(--cond);
+  font-size: 56px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.w-seesaw-panel.active .w-seesaw-pct { color: white; }
+.w-seesaw-panel.passive .w-seesaw-pct { color: rgba(255,255,255,0.18); font-size: 40px; margin-top: 8px; }
+.w-seesaw-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 8px; }
+.w-seesaw-panel.active .w-seesaw-label { color: rgba(255,255,255,0.65); }
+.w-seesaw-panel.passive .w-seesaw-label { color: rgba(255,255,255,0.25); }
+.w-seesaw-desc { font-family: var(--bask); font-style: italic; font-size: 13px; line-height: 1.5; }
+.w-seesaw-panel.active .w-seesaw-desc { color: rgba(255,255,255,0.8); }
+.w-seesaw-panel.passive .w-seesaw-desc { color: rgba(255,255,255,0.25); }
+.w-seesaw-pivot { display: flex; flex-direction: column; align-items: center; gap: 4px; font-family: var(--mono); font-size: 9px; color: rgba(255,255,255,0.2); letter-spacing: 0.1em; text-transform: uppercase; }
+.w-pivot-icon { font-size: 22px; color: var(--wire-orange); }
+
+/* ════════════════════════════════════════
+   AU BAR (attention comparison)
+   ════════════════════════════════════════ */
+.w-au-rows { display: flex; flex-direction: column; gap: 16px; margin-bottom: 24px; }
+.w-au-row { display: flex; align-items: center; gap: 16px; }
+.w-au-site { font-family: var(--mono); font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--wire-muted); width: 150px; flex-shrink: 0; line-height: 1.45; }
+.w-au-track { flex: 1; height: 34px; background: rgba(0,0,0,0.05); position: relative; display: flex; align-items: center; }
+.w-au-fill { height: 100%; display: flex; align-items: center; padding-left: 10px; transition: width 1.4s cubic-bezier(0.25,0.46,0.45,0.94); }
+.w-au-fill.en { background: var(--wire-ink); }
+.w-au-fill.ar { background: var(--wire-orange); opacity: 0.75; }
+.w-au-val { font-family: var(--mono); font-size: 11px; font-weight: 500; color: white; }
+
+</style>
+</head>
+<body>
+
+<!-- ═══════ STICKY TICKER — lives outside all sections ═══════ -->
+<div class="w-ticker">
+  <div class="w-ticker-track">
+    <span class="w-tick">81% of B2B buyers prefer to purchase in their native language · CSA Research, 2020</span>
+    <span class="w-tick">Reuters Arabic site CTR gap: 5.4× vs English site across billions of impressions</span>
+    <span class="w-tick">Same-campaign case study: the localised leg outperforms the English-only leg</span>
+    <span class="w-tick">67% of B2B buyers would pay up to 30% more for a localised solution</span>
+    <span class="w-tick">56.2% of consumers rank language access above price · Kelly / Common Sense Advisory, 2012</span>
+    <span class="w-tick">39% of English ad phrases not understood by targeted European audiences · Gerritsen et al., 2010</span>
+    <span class="w-tick">80% of global companies communicate officially in their national language, not English</span>
+    <span class="w-tick">81% of B2B buyers prefer to purchase in their native language · CSA Research, 2020</span>
+    <span class="w-tick">Reuters Arabic site CTR gap: 5.4× vs English site across billions of impressions</span>
+    <span class="w-tick">Same-campaign case study: the localised leg outperforms the English-only leg</span>
+    <span class="w-tick">67% of B2B buyers would pay up to 30% more for a localised solution</span>
+    <span class="w-tick">56.2% of consumers rank language access above price · Kelly / Common Sense Advisory, 2012</span>
+    <span class="w-tick">39% of English ad phrases not understood by targeted European audiences · Gerritsen et al., 2010</span>
+    <span class="w-tick">80% of global companies communicate officially in their national language, not English</span>
+  </div>
+</div>
+
+<!-- ═══════ HERO ═══════ -->
+<section class="w-hero">
+  <div class="w-hero-ghost">NEWSWIRE</div>
+
+  <!-- Dateline -->
+  <div class="w-dateline" style="opacity:0; animation: fadeUp 0.6s 0.1s forwards;">
+    <span class="w-dateline-time" id="heroTime">—</span>
+    <div class="w-dateline-sep"></div>
+    <span class="w-dateline-time">Reuters Advertising · EMEA Intelligence</span>
+    <span class="w-dateline-ref">Bibliothèque · Ref 001</span>
+  </div>
+
+  <div class="w-hero-body">
+    <div class="w-hero-left">
+      <h1 class="w-hero-hed">Lost in<br><em>translation.</em></h1>
+    </div>
+    <div class="w-hero-right">
+      <div class="w-byline" style="color:rgba(255,255,255,0.3); border-bottom-color:rgba(255,255,255,0.08);">Thomson Reuters™ Advertising · Internal Case · EMEA · June 2026</div>
+      <p class="w-hero-deck">When campaigns target non-English speaking markets, language isn't a detail. It's the difference between <strong>being heard and being ignored.</strong></p>
+      <div class="w-hero-scroll">
+        <div class="w-scroll-line"></div>
+        scroll to read dispatch
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ CH 01 ═══════ -->
+<div class="w-chapter reveal"><span class="w-chapter-num">Dispatch 01</span><div class="w-chapter-rule"></div><span class="w-chapter-title">Our position</span></div>
+
+<section class="w-section w-section-paper">
+  <div class="w-cols-2 reveal" style="margin-bottom: 48px; align-items: start;">
+    <div>
+      <div class="w-byline">The argument</div>
+      <div class="w-hed w-hed-md">Not every campaign needs translation.<br><em>But some absolutely do.</em></div>
+    </div>
+    <div>
+      <p class="w-lede">For global campaigns, English as a lingua franca makes sense. But when a client wants to reach a <strong>specific non-English speaking market</strong> — France, Germany, Japan, the Middle East, Latin America — serving English-only content is an active performance handicap. The data is unambiguous.</p>
+    </div>
+  </div>
+
+  <div class="w-split reveal d1">
+    <div class="w-split-panel light">
+      <span class="w-split-tag">Global campaigns</span>
+      <div class="w-hed w-hed-sm" style="margin-bottom:12px;">English as lingua franca</div>
+      <p class="w-body">Multi-market campaigns across mixed-language environments. <em>English-first is appropriate</em> — broad reach where no single language dominates.</p>
+      <span class="w-split-arrow">Standard practice ✓</span>
+    </div>
+    <div class="w-split-panel dark">
+      <span class="w-split-tag">Market-specific campaigns → our focus</span>
+      <div class="w-hed w-hed-sm" style="color:white; margin-bottom:12px;">Translation as the default</div>
+      <p class="w-body" style="color:rgba(255,255,255,0.55);">A client targeting France, Germany, the Middle East, or Japan. English-only creative enters a <strong style="color:white;">local-language environment</strong> where it will underperform — sometimes dramatically.</p>
+      <span class="w-split-arrow">Where the opportunity is →</span>
+    </div>
+  </div>
+</section>
+
+<div class="w-rule-orange" style="margin: 0 var(--gutter);"></div>
+
+<!-- ═══════ CH 02 ═══════ -->
+<div class="w-chapter reveal" style="padding-top:80px;"><span class="w-chapter-num">Dispatch 02</span><div class="w-chapter-rule"></div><span class="w-chapter-title">What the research says</span></div>
+
+<!-- 39% big stat -->
+<section class="w-section w-section-dark reveal">
+  <div class="w-dateline" style="margin: 0 calc(-1 * var(--gutter)) 48px; padding-left: var(--gutter);">
+    <span class="w-dateline-city">Finding</span>
+    <div class="w-dateline-sep"></div>
+    <span class="w-dateline-time">Gerritsen et al., 2010 · 715 consumers · Western Europe</span>
+  </div>
+  <div style="display: grid; grid-template-columns: auto 1fr; gap: 64px; align-items: center;">
+    <div class="w-stat-hero w-stat-hero-xl">39%</div>
+    <div>
+      <div class="w-byline">Comprehension failure</div>
+      <div class="w-hed w-hed-md" style="color:white; margin-bottom:20px;">of English phrases in targeted ads were <em>not understood</em> by the audience.</div>
+      <p class="w-lede">Even among highly educated, relatively English-proficient audiences in non-anglophone European markets, nearly 4 in 10 ad messages simply didn't register. No compensating brand benefit. The message was lost with nothing gained.</p>
+      <div class="w-source w-source-dk" style="margin-top:20px;">Gerritsen, M. et al. (2010). English in Product Advertisements in Non-English-Speaking Countries in Western Europe. n=715.</div>
+    </div>
+  </div>
+</section>
+
+<!-- Word cloud -->
+<section class="w-section w-section-cream">
+  <div class="w-cols-2 reveal" style="margin-bottom:48px; align-items:end;">
+    <div>
+      <div class="w-byline">Illustration</div>
+      <div class="w-hed w-hed-md">What does 39% <em>actually look like?</em></div>
+    </div>
+    <p class="w-lede">Imagine a typical ad message — ten words or phrases. In a targeted non-English market, nearly four of them evaporate. The audience sees the words. They just don't receive the meaning.</p>
+  </div>
+  <div class="w-words reveal d1" id="wordCloud">
+    <div class="w-word understood">Premium quality</div>
+    <div class="w-word understood">Trusted globally</div>
+    <div class="w-word missed">Unrivalled insight</div>
+    <div class="w-word understood">Invest smarter</div>
+    <div class="w-word missed">Decision-ready</div>
+    <div class="w-word understood">Market leaders</div>
+    <div class="w-word missed">Actionable intelligence</div>
+    <div class="w-word understood">World-class</div>
+    <div class="w-word understood">Industry-leading</div>
+    <div class="w-word missed">Cutting-edge solutions</div>
+  </div>
+  <div class="w-legend reveal d2" style="margin-top:24px;">
+    <div class="w-legend-item"><div class="w-legend-dot" style="background:var(--wire-ink);"></div>Message received</div>
+    <div class="w-legend-item"><div class="w-legend-dot" style="background:var(--wire-orange); opacity:0.4;"></div>Lost on the audience</div>
+  </div>
+  <div class="w-source reveal d3" style="margin-top:14px;">Illustration based on Gerritsen et al. (2010) — 39% average comprehension failure across non-anglophone European markets</div>
+</section>
+
+<!-- 81% grid -->
+<section class="w-section w-section-paper">
+  <div class="w-dateline" style="margin: 0 calc(-1 * var(--gutter)) 48px; padding-left: var(--gutter);">
+    <span class="w-dateline-city">Finding</span>
+    <div class="w-dateline-sep"></div>
+    <span class="w-dateline-time">CSA Research B2B, 2020 · n=956 · 24 countries</span>
+  </div>
+  <div class="reveal" style="margin-bottom:40px;">
+    <div class="w-byline">Preference data</div>
+    <div class="w-hed w-hed-lg" style="margin-bottom:16px;"><em>81 out of 100</em> B2B buyers prefer to purchase in their own language.</div>
+    <p class="w-lede" style="max-width:640px;">This isn't a marginal preference. Across 24 countries, business buyers overwhelmingly chose native-language content — even those who rated their English proficiency as high. Fluency and preference are not the same thing.</p>
+  </div>
+
+  <div class="w-unit-grid reveal d1" id="unitGrid" style="margin-bottom:32px;"></div>
+
+  <div class="w-rule" style="margin-bottom:32px;"></div>
+  <div class="w-cols-3 reveal d2">
+    <div class="w-inline-stat">
+      <div class="n">81%</div>
+      <div class="l">more likely to purchase with local-language presales content</div>
+      <div class="w-source" style="margin-top:8px;">CSA Research B2B, 2020 · n=956 · 24 countries</div>
+    </div>
+    <div class="w-inline-stat">
+      <div class="n">67%</div>
+      <div class="l">would pay up to 30% more for a localised solution</div>
+      <div class="w-source" style="margin-top:8px;">CSA Research B2B, 2020</div>
+    </div>
+    <div class="w-inline-stat">
+      <div class="n">80%</div>
+      <div class="l">of companies communicate officially in their national language — not English</div>
+      <div class="w-source" style="margin-top:8px;">CSA Research B2B, 2020</div>
+    </div>
+  </div>
+</section>
+
+<!-- Seesaw: language vs price -->
+<section class="w-section w-section-dark">
+  <div class="w-dateline" style="margin: 0 calc(-1 * var(--gutter)) 48px; padding-left: var(--gutter);">
+    <span class="w-dateline-city">Finding</span>
+    <div class="w-dateline-sep"></div>
+    <span class="w-dateline-time">Kelly / Common Sense Advisory, 2012 · 2,430 consumers · 8 countries</span>
+  </div>
+  <div class="w-cols-2 reveal" style="align-items:start; margin-bottom:48px;">
+    <div>
+      <div class="w-byline">The decisive factor</div>
+      <div class="w-hed w-hed-lg">Language beats <em>price.</em></div>
+    </div>
+    <p class="w-lede">Of all the factors that influence a buying decision, more than half of global consumers rank access to information in their own language above price. Not features. Not reputation. Price.</p>
+  </div>
+
+  <div class="w-seesaw reveal d1">
+    <div class="w-seesaw-panel active">
+      <div class="w-seesaw-label">Language access</div>
+      <div class="w-seesaw-pct">56.2%</div>
+      <div class="w-seesaw-desc">say language is more important than price</div>
+    </div>
+    <div class="w-seesaw-pivot">
+      <div class="w-pivot-icon">⚖</div>
+      <span>vs</span>
+    </div>
+    <div class="w-seesaw-panel passive">
+      <div class="w-seesaw-label">Price</div>
+      <div class="w-seesaw-pct">43.8%</div>
+      <div class="w-seesaw-desc">put price first</div>
+    </div>
+  </div>
+
+  <div class="w-source w-source-dk reveal d2" style="margin-top:24px;">Kelly / Common Sense Advisory (2012) — 2,430 consumers, 8 countries · 72.4% also more likely to buy when content is in their own language</div>
+</section>
+
+<div class="w-rule-orange" style="margin: 0 var(--gutter);"></div>
+
+<!-- ═══════ CH 03 ═══════ -->
+<div class="w-chapter reveal" style="padding-top:80px;"><span class="w-chapter-num">Dispatch 03</span><div class="w-chapter-rule"></div><span class="w-chapter-title">Reuters platform data</span></div>
+
+<section class="w-section w-section-cream">
+  <div class="w-dateline" style="margin: 0 calc(-1 * var(--gutter)) 48px; padding-left: var(--gutter);">
+    <span class="w-dateline-city">Reuters Internal</span>
+    <div class="w-dateline-sep"></div>
+    <span class="w-dateline-time">reuters.com vs reuters.com/ar · billions of impressions · 2026</span>
+  </div>
+  <div class="w-cols-2 reveal" style="align-items:end; margin-bottom:48px;">
+    <div>
+      <div class="w-byline">Platform evidence</div>
+      <div class="w-hed w-hed-md">English ads on an Arabic site.<br><em>The gap is everywhere.</em></div>
+    </div>
+    <p class="w-lede">Reuters.com/ar serves Arabic-speaking audiences. All ads run in English. We compared CTR and Attention Score across every content section — the story is consistent throughout.</p>
+  </div>
+
+  <!-- CTR Bars -->
+  <div class="reveal d1" style="margin-bottom:40px;">
+    <div style="font-family: var(--mono); font-size: 9px; color: var(--wire-orange); letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 14px;">Click-through rate (CTR) by content section</div>
+    <div class="w-legend" style="margin-bottom:20px;">
+      <div class="w-legend-item"><div class="w-legend-dot" style="background:var(--wire-ink);"></div>reuters.com · English site, English ads</div>
+      <div class="w-legend-item"><div class="w-legend-dot" style="background:var(--wire-orange); opacity:0.65;"></div>reuters.com/ar · Arabic site, English ads</div>
+    </div>
+    <div id="sectionBars"></div>
+  </div>
+
+  <!-- AU Comparison -->
+  <div class="reveal d2" style="background: white; border: 1px solid var(--wire-rule); padding: 36px; margin-bottom:2px;">
+    <div class="w-byline">Attention scores</div>
+    <div class="w-hed w-hed-sm" style="margin-bottom:8px;">But the attention is there.</div>
+    <p class="w-body" style="margin-bottom:28px; color:var(--wire-muted); font-style:italic;">Attention Scores (AU) are almost identical across both sites — the Arabic-site audience is just as engaged with the content.</p>
+    <div class="w-au-rows">
+      <div class="w-au-row">
+        <div class="w-au-site">reuters.com<br>English site</div>
+        <div class="w-au-track">
+          <div class="w-au-fill en" id="auBarEn" style="width:0%"><span class="w-au-val">Comparable</span></div>
+        </div>
+      </div>
+      <div class="w-au-row">
+        <div class="w-au-site">reuters.com/ar<br>Arabic site</div>
+        <div class="w-au-track">
+          <div class="w-au-fill ar" id="auBarAr" style="width:0%"><span class="w-au-val">Comparable</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="w-callout">
+      <p>The Arabic-site audience scores <strong>within a single point</strong> of the English site's Attention Score — the audience is paying attention. <strong>The language mismatch is the only barrier to conversion.</strong></p>
+    </div>
+  </div>
+</section>
+
+<!-- 5.4× callout -->
+<section class="w-section w-section-dark reveal">
+  <div class="w-dateline" style="margin: 0 calc(-1 * var(--gutter)) 48px; padding-left: var(--gutter);">
+    <span class="w-dateline-city">Reuters Internal</span>
+    <div class="w-dateline-sep"></div>
+    <span class="w-dateline-time">Confirmed finding · billions of impressions · 2026</span>
+    <span class="w-dateline-ref">Priority · EMEA Sales</span>
+  </div>
+  <div style="display: grid; grid-template-columns: auto 1fr; gap: 64px; align-items: center;">
+    <div class="w-stat-hero w-stat-hero-xl">5.4<span style="font-size: 0.45em; vertical-align: top; padding-top: 0.2em;">×</span></div>
+    <div>
+      <div class="w-byline">The gap</div>
+      <div class="w-hed w-hed-md" style="color:white; margin-bottom:20px;">lower CTR on the Arabic site, despite <em>near-identical attention scores.</em></div>
+      <p class="w-lede">Same content. Same editorial quality. Same audience attentiveness. Different language. Dramatically different results.</p>
+      <div class="w-source w-source-dk" style="margin-top:20px;">Reuters internal campaign data, 2026. INTL = reuters.com (English). QA INTL = reuters.com/ar (Arabic).</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ CH 04 ═══════ -->
+<div class="w-chapter reveal" style="background: var(--wire-dark); padding-top:0; padding-bottom:0;">
+  <span class="w-chapter-num" style="color:var(--wire-orange);">Dispatch 04</span>
+  <div class="w-chapter-rule" style="background:rgba(255,255,255,0.08);"></div>
+  <span class="w-chapter-title" style="color:rgba(255,255,255,0.3);">Reuters campaign evidence</span>
+</div>
+
+<section class="w-section w-section-cream">
+  <div class="w-dateline" style="margin: 0 calc(-1 * var(--gutter)) 48px; padding-left: var(--gutter);">
+    <span class="w-dateline-city">Case Study</span>
+    <div class="w-dateline-sep"></div>
+    <span class="w-dateline-time">Localised vs English-only · Reuters campaign data · 2025</span>
+  </div>
+  <div class="w-cols-2 reveal" style="align-items:end; margin-bottom:48px;">
+    <div>
+      <div class="w-byline">Field evidence</div>
+      <div class="w-hed w-hed-md">We've seen this on <em>our own campaigns.</em></div>
+    </div>
+    <p class="w-lede">We ran a single campaign — same creative concept, same assets — across two non-English speaking markets simultaneously. One market received a localised-language version; the other ran the English-only original. The data tells the same story — attention captured, conversion lost.</p>
+  </div>
+
+  <div class="w-case-grid reveal d1">
+    <div class="w-case-card">
+      <div class="w-case-tag">Same Campaign · Localised Leg</div>
+      <h3>Same creative, localised into the market's language</h3>
+      <div>
+        <div class="w-bar-group">
+          <div class="w-bar-label"><span class="name">CTR</span><span class="val hi">0.09%</span></div>
+          <div class="w-bar-track"><div class="w-bar-fill primary" style="width:90%"></div></div>
+        </div>
+        <div class="w-bar-group">
+          <div class="w-bar-label"><span class="name">Video completion</span><span class="val hi">~60%</span></div>
+          <div class="w-bar-track"><div class="w-bar-fill primary" style="width:80%"></div></div>
+        </div>
+        <div class="w-bar-group">
+          <div class="w-bar-label"><span class="name">Impression share</span><span class="val hi">80%</span></div>
+          <div class="w-bar-track"><div class="w-bar-fill primary" style="width:80%"></div></div>
+        </div>
+      </div>
+      <div class="w-au-card" style="max-width:200px;">
+        <div class="w-au-label">Attention Score</div>
+        <div class="w-au-num">30.5</div>
+        <div class="w-au-sub">Localised leg</div>
+      </div>
+    </div>
+    <div class="w-case-card">
+      <div class="w-case-tag">Same Campaign · English-only Leg</div>
+      <h3>English creatives, reuters.com — attention without conversion</h3>
+      <div>
+        <div class="w-bar-group">
+          <div class="w-bar-label"><span class="name">CTR</span><span class="val">0.06%</span></div>
+          <div class="w-bar-track"><div class="w-bar-fill secondary" style="width:60%"></div></div>
+        </div>
+        <div class="w-bar-group">
+          <div class="w-bar-label"><span class="name">Video completion</span><span class="val">~48%</span></div>
+          <div class="w-bar-track"><div class="w-bar-fill secondary" style="width:64%"></div></div>
+        </div>
+        <div class="w-bar-group">
+          <div class="w-bar-label"><span class="name">Impression share</span><span class="val">20%</span></div>
+          <div class="w-bar-track"><div class="w-bar-fill secondary" style="width:20%"></div></div>
+        </div>
+      </div>
+      <div class="w-au-card hi" style="max-width:200px; margin-bottom:20px;">
+        <div class="w-au-label">Attention Score</div>
+        <div class="w-au-num">31.5</div>
+        <div class="w-au-sub">English-only leg · higher AU than localised</div>
+      </div>
+      <div class="w-callout">
+        <p>The English-only leg's AU is actually <strong>higher than the localised leg's</strong>. The audience was paying attention — but without localised-language assets, that attention didn't convert. <strong>This is a direct performance unlock waiting to happen.</strong></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ CLOSING ═══════ -->
+<section class="w-section w-section-dark">
+  <div class="w-hed w-hed-lg reveal" style="color:white; max-width:760px; margin-bottom:48px;">The attention is there.<br>The language <em>is the barrier.</em></div>
+
+  <div class="w-footer">
+    <div>
+      <div class="w-footer-meta">Sources: Gerritsen et al. (2010) · CSA Research / Kantar (2020) · Kelly / Common Sense Advisory (2012) · Flores, Chen &amp; Ross (2014) · He (2026) · Fannouna (2025) · Thomson Reuters™ internal campaign data: anonymised client case study and reuters.com/ar performance analysis (2026)</div>
+      <div class="w-footer-copyright">© 2026 Thomson Reuters. All rights reserved.</div>
+    </div>
+    <div class="w-footer-brand">Reuters</div>
+  </div>
+</section>
+
+<script>
+/* ── LIVE CLOCK ── */
+function updateClock() {
+  const now = new Date();
+  const time = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', timeZoneName: 'short' });
+  const date = now.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
+  const el = document.getElementById('heroTime');
+  if (el) el.textContent = date + ' · ' + time;
+}
+updateClock();
+setInterval(updateClock, 30000);
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+/* ── WORD CLOUD ── */
+const missed = document.querySelectorAll('.w-word.missed');
+const cloudObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      missed.forEach((w, i) => setTimeout(() => w.classList.add('fade'), 400 + i * 220));
+      cloudObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.5 });
+cloudObs.observe(document.getElementById('wordCloud'));
+
+/* ── UNIT GRID ── */
+const grid = document.getElementById('unitGrid');
+for (let i = 0; i < 100; i++) {
+  const d = document.createElement('div');
+  d.className = 'w-unit';
+  grid.appendChild(d);
+}
+const gridObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const units = grid.querySelectorAll('.w-unit');
+      units.forEach((u, i) => setTimeout(() => { if (i < 81) u.classList.add('on'); }, i * 16));
+      gridObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.3 });
+gridObs.observe(grid);
+
+/* ── SECTION BARS ── */
+const sectionData = [
+  { name: 'Business',           en: 0.0730, ar: 0.0144 },
+  { name: 'Home',                en: 0.0844, ar: 0.0264 },
+  { name: 'Markets',            en: 0.0637, ar: 0.0150 },
+  { name: 'Legal',                en: 0.0704, ar: 0.0294 },
+  { name: 'Lifestyle',          en: 0.1073, ar: 0.0131 },
+  { name: 'Opinion & Analysis', en: 0.0589, ar: 0.0045 },
+  { name: 'Commentary',        en: 0.0604, ar: 0.0024 },
+  { name: 'Fact Check',          en: 0.0681, ar: 0.0009 },
+];
+const maxCTR = Math.max(...sectionData.map(d => d.en));
+const bc = document.getElementById('sectionBars');
+sectionData.forEach(d => {
+  const row = document.createElement('div');
+  row.className = 'w-dual-row';
+  row.innerHTML = `
+    <div class="w-dual-label">${d.name}</div>
+    <div class="w-dual-bars">
+      <div class="w-mini-wrap"><div class="w-mini-bar en" style="width:${(d.en/maxCTR)*100}%"></div></div>
+      <div class="w-mini-wrap"><div class="w-mini-bar ar" style="width:${(d.ar/maxCTR)*100}%"></div></div>
+    </div>`;
+  bc.appendChild(row);
+});
+
+/* ── AU BARS ── */
+const auEn = document.getElementById('auBarEn');
+const auAr = document.getElementById('auBarAr');
+const auObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      auEn.style.width = '97%';
+      auAr.style.width = '94%';
+      auObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.4 });
+if (auEn) auObs.observe(auEn.closest('.w-au-rows'));
+</script>
+</body>
+</html>
